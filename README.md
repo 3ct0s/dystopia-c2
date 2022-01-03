@@ -55,6 +55,8 @@ New clients that execute the backdoor are called **"Agents"**. Every Agent gets 
 - Encrypted Traffic (HTTPS)
 - Connection stays Stealthy and Undetected
 
+You can view the available commands from the [help menu](inst/COMMANDS.md).
+
 ## Contributors
 For anyone who is interested in contributing to Disctopia, please make sure you fork the project and make a pull request.
 ## Disclaimer
