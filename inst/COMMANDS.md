@@ -16,7 +16,7 @@
 
     Downloads will be saved on the **#downloads** channel.
 
-- **!upload {AGENT-ID} {URL}**
+- **!upload {AGENT-ID} {URL} {NAME}**
 
     With the !upload command you can upload a file to the agent. You will need to specify a direct download link to the file.
 
