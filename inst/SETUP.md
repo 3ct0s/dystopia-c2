@@ -40,6 +40,10 @@ The last thing you can do is to customize the bot. Change its name, its avatar e
 
 ![image](https://i.ibb.co/b3YJmBq/Capture.png)
 
+Make sure you scroll down and enable the 3 options from the **Privileged Gateway Intents** section.
+
+![image](https://i.ibb.co/f2P9KgQ/Capture.png)
+
 ## Step 4# Invite the Bot
 
 Now you need to invite the bot to your server. Head to the [application page](https://discord.com/developers/applications) and click on the Application that you just created. Then click on the **OAuth2 tab** list and click on the **URL Generator** tab.
@@ -59,6 +63,7 @@ Now access the link that you coppied and you should see th bot invitation page. 
 ![image](https://i.ibb.co/hgqLsVB/Capture.png)
 
 Once you are done with these you should see your Bot on your server.
+
 
 ## Step 5# Enable developer mode
 
