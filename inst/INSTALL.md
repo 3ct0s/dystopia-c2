@@ -10,7 +10,7 @@ Next you need to cd into the cloned project files, run a command to fix an error
 cd disctopia-c2
 sed $'s/\r$//' ./setup.sh > ./setup-new.sh 
 chmod +x setup-new.sh
-./setup-new.sh
+sudo ./setup-new.sh
 ```
 You will be asked to say **yes** or **no** while installing the needed dependencies. Make sure you select **yes** and press enter.
 
