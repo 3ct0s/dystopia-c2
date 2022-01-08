@@ -56,7 +56,7 @@ Now that we have saved all the settings, we can run the builder.py script.
 
 To Execute the builder.py script, you need to run the following command:
 ```
-python3 builder.py
+sudo python3 builder.py
 ```
 
 > If you ever need help with the commands execute the `help` command you will get the help menu
