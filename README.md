@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/th3r4ven/"><img src="https://i.ibb.co/K0RqpVb/disctopia.png" width=600 weigth=500 alt="Disctopia"></a>
+  <a href="https://github.com/3ct0s/"><img src="https://i.ibb.co/K0RqpVb/disctopia.png" width=600 weigth=500 alt="Disctopia"></a>
   <br>
   Disctopia
   <br>
