@@ -15,5 +15,5 @@ if test -f "$FILE"; then
 else
 	sudo wget https://www.python.org/ftp/python/3.8.9/python-3.8.9.exe
 fi
-sudo wine cmd /c python-3.8.9.exe
+sudo wine cmd /c python-3.8.9.exe /quiet InstallAllUsers=0
 sudo wine "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe" -m pip install keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller==4.2 discord_webhook==0.14.0 discord.py
