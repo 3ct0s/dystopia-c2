@@ -55,6 +55,11 @@ Once you are done editing your settings.json file, you can save it and and have 
 Now that we have saved all the settings, we can run the builder.py script.
 
 To Execute the builder.py script, you need to run the following command:
+### Windows
+```
+.\venv\Scripts\python.exe builder.py
+```
+### Linux
 ```
 sudo python3 builder.py
 ```
