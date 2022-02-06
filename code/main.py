@@ -273,7 +273,7 @@ async def webshot(context):
             cam = cv2.VideoCapture(0)
             ret, frame = cam.read()
 
-            current_time = datetime.
+            current_time = datetime.now()
             path = "{}/Webcam{}{}{}.png".format(USER_PROFILE, current_time.year, current_time.month, current_time.day)
 
             cv2.imwrite(path, frame)
