@@ -4,6 +4,7 @@ import os
 import subprocess as sp
 import requests
 import random
+import cv2
 import platform
 import re
 from urllib.request import Request, urlopen
