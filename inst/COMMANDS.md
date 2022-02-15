@@ -6,6 +6,13 @@
 
     With the !cmd command you can run your own commands on the agent. If an agent-id is not specified, the command will be run on all agents.
 
+- **!cd {AGENT-ID} {PATH}**
+    
+    With the !cd command you can change the working directory of the agent.
+
+- **!webshot {AGENT-ID}**
+
+    With the !webshot command you can take a snapshot of the agent's webcam (If there is one).
 - **!process {AGENT-ID}**
 
     With the !process command you can view all the process on the agent.
