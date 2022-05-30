@@ -110,7 +110,6 @@ class Evasion:
 def test():
     evasion = Evasion()
     if evasion.main() == False:
-        print("no sandbox")
         return True
     elif evasion.main() == True:
         return False

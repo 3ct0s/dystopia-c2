@@ -8,6 +8,7 @@
         "downloads-id": "None",
         "agent-online-id": "None",
         "credentials-id": "None",
-        "auto-keylogger": "None"
+        "auto-keylogger": "None",
+        "auto-persistent": "None"
     }
 }

