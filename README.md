@@ -29,15 +29,15 @@ New clients that execute the backdoor are called **"Agents"**. Every Agent gets 
 
 ## How to Install Disctopia?
 
-> Please follow the [installation guide](inst/INSTALL.md) to install Disctopia.
+> Please follow the [installation guide](https://github.com/3ct0s/disctopia-c2/wiki/Installation-Guide) to install Disctopia.
 
 ## How to Setup Disctopia
 
-> Please follow the [setup guide](inst/SETUP.md) to setup Disctopia.
+> Please follow the [setup guide](https://github.com/3ct0s/disctopia-c2/wiki/Setup-Guide) to setup Disctopia.
 
 ## How to Build a backdoor?
 
-> Please follow the [build guide](inst/BUILD.md) to build a backdoor with Disctopia.
+> Please follow the [build guide](https://github.com/3ct0s/disctopia-c2/wiki/Build-Guide) to build a backdoor with Disctopia.
 
 ### Disctopia Features
 
@@ -51,11 +51,12 @@ New clients that execute the backdoor are called **"Agents"**. Every Agent gets 
 - Discord Token Grabber
 - Screenshot
 - Persistence
+- Self Destructing
 - Execute Commands
 - Encrypted Traffic (HTTPS)
 - Connection stays Stealthy and Undetected
 
-You can view the available commands from the [help menu](inst/COMMANDS.md).
+You can view the available commands from the [help menu](https://github.com/3ct0s/disctopia-c2/wiki/Disctopia-Help-Command).
 
 ## Contributors
 For anyone who is interested in contributing to Disctopia, please make sure you fork the project and make a pull request.
