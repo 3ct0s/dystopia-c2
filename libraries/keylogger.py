@@ -77,4 +77,3 @@ class Keylogger:
     def stop():
         global STOP
         STOP = True
-        return STOP
