@@ -1,4 +1,3 @@
-from pickle import TRUE
 import keyboard 
 from threading import Timer
 from datetime import datetime
@@ -77,4 +76,5 @@ class Keylogger:
 
     def stop():
         global STOP
-        STOP = TRUE
+        STOP = True
+        return STOP
