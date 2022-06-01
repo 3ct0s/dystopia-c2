@@ -18,8 +18,8 @@ class Evasion:
         
     def check_all_DLL_names(self):
         SandboxEvidence = []
-        sandboxDLLs = ["sbiedll.dll","dbghelp.dll","api_log.dll","dir_watch.dll","pstorec.dll","vmcheck.dll","wpespy.dll"]
-        allPids = win32process.EnumeProcesses()
+        sandboxDLLs = ["sbiedll.dll","api_log.dll","dir_watch.dll","pstorec.dll","vmcheck.dll","wpespy.dll"]
+        allPids = win32process.EnumProcesses()
         for pid in allPids:
             try:
                 hProcess = win32api.OpenProcess(0x0410, 0, pid)
@@ -37,12 +37,13 @@ class Evasion:
                 pass
 
         if SandboxEvidence:
-            return True
-        else:
             return False
+        else:
+            return True
+    
     def check_all_processes_names(self):
         EvidenceOfSandbox =[]
-        sandboxProcesses = "vmsrvc", "tcpview", "wireshark", "visual basic", "fiddler", "vmware", "vbox", "process explorer", "autoit", "vboxtray", "vmtools", "vmrawdsk", "vmusbmouse", "vmvss", "vmscsi", "vmxnet", "vmx_svga", "vmmemctl", "df5serv", "vboxservice", "vmhgfs"
+        sandboxProcesses = "vmsrvc", "tcpview", "wireshark", "visual basic", "fiddler", "vbox", "process explorer", "autoit", "vboxtray", "vmtools", "vmrawdsk", "vmusbmouse", "vmvss", "vmscsi", "vmxnet", "vmx_svga", "vmmemctl", "df5serv", "vboxservice", "vmhgfs"
         _, runningProcesses = win32pdh.EnumObjectItems(None,None,'process', win32pdh.PERF_DETAIL_WIZARD)
 
         for process in runningProcesses:
@@ -56,62 +57,33 @@ class Evasion:
         else:
             return False
 
-    def debugging_detection(self):
-        isDebuggerPresent = windll.kernel32.IsDebuggerPresent
-
-        if (isDebuggerPresent):
-            return False
-        else:
-            return True
-
-    def disk_size(self):
-        minDiskSizeGB = 50
-
-        if len(sys.argv) > 1:
-            minDiskSizeGB = float(sys.argv[1])
-        
-        _, diskSizeBytes, _ = win32api.GetDiskFreeSpaceEx()
-
-        diskSizeGB = diskSizeBytes/1073741824
-
-        if diskSizeGB > minDiskSizeGB:
-            return True
-        else:
-            return False
-
-    def usb(self):
-        MinimumUSBHistory = 2
+    def click_tracker(self):
+        count = 0
+        minClicks = 4
 
         if len(sys.argv) == 2:
-            MinimumUSBHistory = int(sys.argv[1])
+            minClicks = int(sys.argv[1])
+        while count < minClicks:
+            new_state_left_click = win32api.GetAsyncKeyState(1)
+            new_state_right_click = win32api.GetAsyncKeyState(2)
 
-        HKLM = ConnectRegistry(None,HKEY_LOCAL_MACHINE)
-        Opened_HKLM_Key = OpenKey(HKLM, r'SYSTEM\ControlSet001\Enum\USBSTOR')
+            if new_state_left_click % 2 == 1:
+                count += 1
+            if new_state_right_click % 2 == 1:
+                count += 1
 
-        if QueryInfoKey(Opened_HKLM_Key)[0] >= MinimumUSBHistory:
-            return True
-        else:
-            return False
-    
+        return True
+            
     def main(self):  
-        if self.usb():
-            return False
-        elif self.disk_size():
-            return False
-        elif self.debugging_detection():
-            return False
-        elif self.check_all_processes_names():
-            return False
-        elif self.check_all_DLL_names():
-            return False
-        else:
+        if self.disk_size() and self.click_tracker() and self.check_all_processes_names() and self.check_all_DLL_names():
             return True
+        else:
+            return False
+
 
 def test():
     evasion = Evasion()
-    if evasion.main() == False:
+    if evasion.main() == True:
         return True
-    elif evasion.main() == True:
-        return False
     else:
         return False

