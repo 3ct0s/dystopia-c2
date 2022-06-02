@@ -4,6 +4,7 @@ import json
 import subprocess
 import os
 import argparse
+import distro
 from prettytable import PrettyTable
 from sys import platform as OS
 
@@ -21,6 +22,7 @@ class Builder:
         self.AGENT_ONLINE_ID = AGENT_ONLINE_ID
         self.CREDENTIALS_ID = CREDENTIALS_ID
         self.DEBUG = DEBUG
+        self.distro = distro.name()
         self.path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
 
 
@@ -47,6 +49,8 @@ class Builder:
         self.compile()
 
     def compile(self):
+        if "Arch" in self.distro or "Manjaro" in self.distro:
+           self.path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/AppData/Local/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
         compile_command = ["wine", self.path_to_pyinstaller, "--onefile", "--noconsole", "--icon=img/exe_file.ico", self.BACKDOOR_NAME+".py"]
         if self.DEBUG == True:
             compile_command.pop(3)
