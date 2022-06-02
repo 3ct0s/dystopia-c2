@@ -27,7 +27,7 @@ from winreg import *
 from ctypes import *
 from libraries import credentials,keylogger,tokengrabber,sandboxevasion
 
-VERSION = "v1.1.4"
+VERSION = "v1.1.5"
 
 KEYLOG = {KEYLOG}
 PERSISTENT = {PERSISTENT}
