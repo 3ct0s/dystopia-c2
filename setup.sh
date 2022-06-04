@@ -10,14 +10,18 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 		echo "/etc/lsb-release doesn't exist"
 	fi
 	
-	if [[ ${DISTRIB} = "Arch"* || ${DISTRIB} = "ManjaroLinux"* ]]; then
+	if [[ ${DISTRIB} = "Arch"* ]]; then
 		sudo pacman -Syyu
-		sudo pacman -S base-devel --needed
-		sudo pacman -S yay --noconfirm
-		yay -S python38
+		yay -S python39
 		sudo pacman -S python-pip --noconfirm 
 		sudo pip3 install -r requirements.txt
-		sudo pacman -S wine --noconfirm
+		sudo pacman -S install wine --noconfirm
+	elif [[ ${DISTRIB} = "ManjaroLinux"* ]]; then
+		sudo pacman -Syyu
+		yay -S python39
+		sudo pacman -S python-pip --noconfirm 
+		sudo pip3 install -r requirements.txt
+		sudo pacman -S install wine --noconfirm
 	else
 		rm /var/lib/dpkg/lock
 		rm /var/cache/apt/archives/lock
@@ -43,7 +47,9 @@ if [ "$arg1" == "$arg2" ]; then
 else
 	sudo wine cmd /c python-3.8.9.exe
 fi
-if [[ ${DISTRIB} = "Arch"* || ${DISTRIB} = "ManjaroLinux"* ]]; then
+if [[ ${DISTRIB} = "Arch"* ]]; then
+	sudo wine "/root/.wine/drive_c/users/root/AppData/Local/Programs/Python/Python38-32/python.exe" -m pip install keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller discord_webhook==0.14.0 discord.py opencv-python
+elif [[ ${DISTRIB} = "ManjaroLinux"* ]]; then
 	sudo wine "/root/.wine/drive_c/users/root/AppData/Local/Programs/Python/Python38-32/python.exe" -m pip install keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller discord_webhook==0.14.0 discord.py opencv-python
 elif [[ ${DISTRIB} = "Not Arch"* ]]; then
 	sudo wine "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe" -m pip install keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller discord_webhook==0.14.0 discord.py opencv-python
