@@ -22,6 +22,7 @@ import time
 from winreg import HKEY_LOCAL_MACHINE, ConnectRegistry
 import win32api
 import win32process
+import psutil
 import win32pdh
 from winreg import *
 from ctypes import *
