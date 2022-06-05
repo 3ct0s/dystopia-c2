@@ -84,7 +84,7 @@ print('''
    ░     ░        ░  ░ ░                   ░ ░            ░        ░  ░
  ░                   ░                                                 
 
-Made by Dimitris Kalopisis | Twitter: @DKalopisis | Version: 1.1.6\n\n\n''')
+Made by Dimitris Kalopisis | Twitter: @DKalopisis | Version: 1.1.7\n\n\n''')
 
 list =["None","None","None","None","None","None","None","None","None","None"]
 
