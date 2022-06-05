@@ -6,6 +6,7 @@ import win32process
 import win32pdh
 import sys
 import os
+import psutil
 from winreg import *
 from datetime import datetime
 from ctypes import *
@@ -42,10 +43,11 @@ class Evasion:
             return True
     
     def check_all_processes_names(self):
-        EvidenceOfSandbox =[]
+        EvidenceOfSandbox = []
         sandboxProcesses = "vmsrvc", "tcpview", "wireshark", "visual basic", "fiddler", "vbox", "process explorer", "autoit", "vboxtray", "vmtools", "vmrawdsk", "vmusbmouse", "vmvss", "vmscsi", "vmxnet", "vmx_svga", "vmmemctl", "df5serv", "vboxservice", "vmhgfs"
-        _, runningProcesses = win32pdh.EnumObjectItems(None,None,'process', win32pdh.PERF_DETAIL_WIZARD)
+        runningProcesses = [p.name() for p in psutil.process_iter()]
 
+        
         for process in runningProcesses:
             for sandboxProcess in sandboxProcesses:
                 if sandboxProcess in str(process):
@@ -89,7 +91,7 @@ class Evasion:
 
         return True
             
-    def main(self):  
+    def main(self):
         if self.disk_size() and self.click_tracker() and self.check_all_processes_names() and self.check_all_DLL_names():
             return True
         else:

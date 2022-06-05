@@ -44,9 +44,9 @@ else
 	sudo wine cmd /c python-3.8.9.exe
 fi
 if [[ ${DISTRIB} = "Arch"* || ${DISTRIB} = "ManjaroLinux"* ]]; then
-	sudo wine "/root/.wine/drive_c/users/root/AppData/Local/Programs/Python/Python38-32/python.exe" -m pip install keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller discord_webhook==0.14.0 discord.py opencv-python
+	sudo wine "/root/.wine/drive_c/users/root/AppData/Local/Programs/Python/Python38-32/python.exe" -m pip install psutil keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller discord_webhook==0.14.0 discord.py opencv-python
 elif [[ ${DISTRIB} = "Not Arch"* ]]; then
-	sudo wine "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe" -m pip install keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller discord_webhook==0.14.0 discord.py opencv-python
+	sudo wine "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe" -m pip install psutil keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller discord_webhook==0.14.0 discord.py opencv-python
 fi
 fi
 echo "Done"
