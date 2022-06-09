@@ -9,7 +9,7 @@
 <h4 align="center">Disctopia Command and Control</h4>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Backdoor_Platform-windows-blue">
+    <img src="https://img.shields.io/badge/Backdoor_Platform-Windows-blue">
     <img src="https://img.shields.io/badge/Version-1.1.6-blue">
     <img src="https://img.shields.io/badge/Python-3.8.9-blue">
 </p>
