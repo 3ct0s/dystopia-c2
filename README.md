@@ -48,7 +48,6 @@ New clients that execute the backdoor are called **"Agents"**. Every Agent gets 
 - File Upload
 - File Download
 - View Processes
-- Discord Token Grabber
 - Screenshot
 - Persistence
 - Self Destructing
