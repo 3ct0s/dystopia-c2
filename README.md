@@ -45,6 +45,9 @@ New clients that execute the backdoor are called **"Agents"**. Every Agent gets 
 - Handle Multiple Agents
 - Keylogger
 - Credential Stealer
+- Wallpaper Changer
+- Record Micrphone Activity
+- Reverse Shell
 - File Upload
 - File Download
 - View Processes
