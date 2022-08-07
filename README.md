@@ -54,6 +54,7 @@ New clients that execute the backdoor are called **"Agents"**. Every Agent gets 
 - Screenshot
 - Persistence
 - Self Destructing
+- Text to Speech
 - Execute Commands
 - Encrypted Traffic (HTTPS)
 - Connection stays Stealthy and Undetected
