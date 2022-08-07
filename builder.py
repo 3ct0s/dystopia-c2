@@ -23,7 +23,7 @@ class Builder:
         self.CREDENTIALS_ID = CREDENTIALS_ID
         self.DEBUG = DEBUG
         self.distro = distro.name()
-        self.path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
+        self.path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/AppData/Local/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
 
 
     def build(self):

