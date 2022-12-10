@@ -19,4 +19,4 @@ If ($args[0] -eq "-s"){
 }
 
 & "$pythonInstallDir\python.exe" -m venv venv
-& "$(Get-Location)\venv\Scripts\python.exe" -m pip install distro psutil keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller discord_webhook==0.14.0 discord.py prettytable opencv-python==4.5.3.56 sounddevice scipy
+& "$(Get-Location)\venv\Scripts\python.exe" -m pip install distro psutil keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller discord_webhook==0.14.0 discord.py prettytable opencv-python==4.5.3.56 sounddevice scipy==1.9.0
