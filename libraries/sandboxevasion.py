@@ -76,7 +76,7 @@ class Evasion:
 
     def click_tracker(self):
         count = 0
-        minClicks = 4
+        minClicks = 10
 
         if len(sys.argv) == 2:
             minClicks = int(sys.argv[1])
