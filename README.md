@@ -10,7 +10,7 @@
 
 <p align="center">
     <img src="https://img.shields.io/badge/Backdoor_Platform-Windows-blue">
-    <img src="https://img.shields.io/badge/Version-1.2.0-blue">
+    <img src="https://img.shields.io/badge/Version-2.0.0-blue">
     <img src="https://img.shields.io/badge/Python-3.8.9-blue">
 </p>
 
@@ -18,50 +18,50 @@
 
 ## What is Disctopia?
 
-Disctopia is an open source Python Discord Bot that works as a backdoor that you can control from a Discord server. It uses the **Discord API** to communicate between the agent and the Discord server.
+Disctopia is a malware generator that generates backdoors which use online platforms as C2s. This includes, Discord, Telegram and Github. 
 
 ## How does it work?
 
-The Disctopia backdoor is made using the Discord API. That executable backdoor that gets generated is a Discord Bot that connects to a Discord server where you can control it. 
-This connection stays undetected because it is considered normal discord traffic.
+The disctopia backdoors are using libraries which allow the backdoor to act as a "Bot" for the above mentioned platorms. Essentially the attacker contacts the bot and the specifies a malicious command to execute on the target "Agent". 
 
-New clients that execute the backdoor are called **"Agents"**. Every Agent gets a unique ID that can be used to call the backdoor.
+Disctopia is equiped with a lot of features **some** of which are:
+- Encrypted traffic (HTTPS)
+- Running system commands on target Agent
+- Keylogger (Limited to Discord)
+- Grabbing webcam snaps
+- Multiple online agents a time (Limited to Discord & GitHub)
 
-## How to Install Disctopia?
+## Installation and Usage
 
-> Please follow the [installation guide](https://github.com/3ct0s/disctopia-c2/wiki/Installation-Guide) to install Disctopia.
+Disctopia is better installed and used on Kali Linux:
+```
+git clone https://github.com/3ct0s/disctopia-c2
+cd ./disctopia-c2
+chmod +x setup.sh
+./setup.sh
+```
+Once this is done we can use the builder. Lets build a discord based C2 backdoor:
+```
+python builder.py
+use discord
+set name <backdoor-name>
+set guild-id <server id from discord>
+set bot-token <discord bot token>
+set channel-id <channel id from discord server>
+set webhook <discord webhook>
+build
+```
 
 ## How to Setup Disctopia
+Since the setup process is very specific for each platform:
 
 > Please follow the [setup guide](https://github.com/3ct0s/disctopia-c2/wiki/Setup-Guide) to setup Disctopia.
 
-## How to Build a backdoor?
 
-> Please follow the [build guide](https://github.com/3ct0s/disctopia-c2/wiki/Build-Guide) to build a backdoor with Disctopia.
 
-### Disctopia Features
-
-- Gathers Infomartion about the Agent
-- Handle Multiple Agents
-- Keylogger
-- Credential Stealer
-- Wallpaper Changer
-- Record Micrphone Activity
-- Reverse Shell
-- File Upload
-- File Download
-- View Processes
-- Screenshot
-- Persistence
-- Self Destructing
-- Execute Commands
-- Encrypted Traffic (HTTPS)
-- Connection stays Stealthy and Undetected
-
-You can view the available commands from the [help menu](https://github.com/3ct0s/disctopia-c2/wiki/Disctopia-Help-Command).
 
 ## Contributors
-For anyone who is interested in contributing to Disctopia, please make sure you fork the project and make a pull request.
+Contributions are welcome. For anyone who is interested in contributing to Disctopia, please make sure you fork the project and make a pull request.
 ## Disclaimer
 
 This github repository is made for educational purposes only. The developer is not responsible for any misuse of this software. **Do not use this software for illegal purposes.**
