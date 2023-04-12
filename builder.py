@@ -246,9 +246,9 @@ try:
                 f.write(newfile)
                 f.close()
                 
-                path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe/Scripts/pyinstaller.exe')
+                path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
                 if "Arch" in distro.name() or "Manjaro" in distro.name():
-                    path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe/Scripts/pyinstaller.exe')
+                    path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
                 compile_command = ["wine", path_to_pyinstaller, "--onefile", "--noconsole", "--icon=img/exe_file.ico", list[0]+".py"]
 
                 subprocess.call(compile_command)
