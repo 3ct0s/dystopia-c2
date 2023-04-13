@@ -194,6 +194,8 @@ try:
         "name" - The name of the backdoor
         "bot-token" - The token of the Telegram bot
         "user-id" - The ID of the Telegram user
+
+        IMPORTANT: This can only be used with one agent online at a time!
                             ''')
 
                         elif payload == "github":

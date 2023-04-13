@@ -57,9 +57,6 @@ Since the setup process is very specific for each platform:
 
 > Please follow the [setup guide](https://github.com/3ct0s/disctopia-c2/wiki/Setup-Guide) to setup Disctopia.
 
-
-
-
 ## Contributors
 Contributions are welcome. For anyone who is interested in contributing to Disctopia, please make sure you fork the project and make a pull request.
 ## Disclaimer
