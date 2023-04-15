@@ -57,7 +57,7 @@ build
 ## How to Setup Disctopia
 Since the setup process is very specific for each platform:
 
-> Please follow the [setup guide](https://github.com/3ct0s/disctopia-c2/wiki/Setup-Guide) to setup Disctopia.
+> Please follow the [setup guide](https://github.com/3ct0s/disctopia-c2/wiki/) to setup Disctopia.
 
 ## Contributors
 Contributions are welcome to our GitHub repo! We value community involvement and appreciate all types of contributions, from bug reports to code. Join us in building something great and making a positive impact on the world. Get involved today!
