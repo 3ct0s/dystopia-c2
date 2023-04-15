@@ -18,7 +18,9 @@
 
 ## What is Disctopia?
 
-Disctopia is a malware generator that generates backdoors which use online platforms as C2s. This includes, Discord, Telegram and Github. Our goal is to prove that anything can be a C2, if you want to...
+Disctopia is a malware generator that generates backdoors which use online platforms as C2s. This includes, Discord, Telegram and Github. 
+
+Our goal is to prove that anything can be a C2, if you want to :) ...
 
 ## How does it work?
 
