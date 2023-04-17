@@ -275,27 +275,22 @@ try:
             else:
                 print('[!] Updating code...')
 
-                i = 0
-                while True:
-                    i = (i + 1) % 4
-                    if i == 0:
-                        sys.stdout.write('\r-')
-                    elif i == 1:
-                        sys.stdout.write('\r/')
-                    elif i == 2:
-                        sys.stdout.write('\r|')
-                    elif i == 3:
-                        sys.stdout.write('\r\\')
-                    sys.stdout.flush()
-                    time.sleep(0.2)
+                cmd = ['git', 'reset', '--hard', 'HEAD']
+                subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-                    cmd = ['git', 'checkout', latest_tag]
-                    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                cmd = ['git', 'fetch', '--tags', '--prune']
+                subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-                    sys.stdout.write('\r')
-                    print(f'[!] Code has been updated to {latest_tag}')
-                    print('[*] Quiting...')
-                    exit()
+                cmd = ['git', 'pull', '--ff-only']
+                subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+                cmd = ['git', 'checkout', latest_tag]
+                subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+                print(f'[!] Code has been updated to {latest_tag}')
+                print('[*] Quitting...')
+                exit()
+
 
         else:
             print("[!] Invalid command!\n")
