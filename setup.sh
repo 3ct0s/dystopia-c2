@@ -51,7 +51,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 		sudo wine "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exee" -m pip install psutil keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller discord_webhook==0.14.0 discord.py opencv-python==4.5.3.56 sounddevice scipy==1.9.0 pyTelegramBotAPI PyGithub
 	elif [[ ${DISTRIB} = "Not Arch"* ]]; then
 		# Check if Python executable exists again
-		FILE= "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe"
+		FILE="/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe"
 		if test -f "$FILE"; then
 			sudo wine "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe" -m pip install psutil keyboard==0.13.5 pywin32==303 pycryptodome==3.12.0 pyautogui==0.9.53 pyinstaller==5.3 discord_webhook==0.14.0 discord.py opencv-python==4.5.3.56 sounddevice scipy==1.9.0 pyTelegramBotAPI PyGithub
 		else
