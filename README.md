@@ -10,7 +10,7 @@
 
 <p align="center">
     <img src="https://img.shields.io/badge/Backdoor_Platform-Windows-blue">
-    <img src="https://img.shields.io/badge/Version-2.1.0-blue">
+    <img src="https://img.shields.io/badge/Version-2.1.1-blue">
     <img src="https://img.shields.io/badge/Python-3.8.9-blue">
 </p>
 
