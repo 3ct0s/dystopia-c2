@@ -26,7 +26,7 @@ print('''
  ▒▒▓  ▒ ░▓  ▒ ▒▓▒ ▒ ░░ ░▒ ▒  ░  ▒ ░░   ░ ▒░▒░▒░ ▒▓▒░ ░  ░░▓   ▒▒   ▓▒█░
  ░ ▒  ▒  ▒ ░░ ░▒  ░ ░  ░  ▒       ░      ░ ▒ ▒░ ░▒ ░      ▒ ░  ▒   ▒▒ ░
  ░ ░  ░  ▒ ░░  ░  ░  ░          ░      ░ ░ ░ ▒  ░░        ▒ ░  ░   ▒   
-   ░     ░        ░  ░ ░                   ░ ░            ░        ░  ░ v2.0.0
+   ░     ░        ░  ░ ░                   ░ ░            ░        ░  ░ v2.1.0
  ░                   ░                                                 
 
 Made by Dimitris Kalopisis aka Ectos | Twitter: @DKalopisis \n\nRun 'help use' to get started!''')
