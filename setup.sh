@@ -34,7 +34,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         if test -f "$FILE"; then
                 echo "$FILE already exists."
         else
-                sudo wget https://www.python.org/ftp/python/3.8.9/python-3.8.9.exe
+                sudo wget https://www.python.org/ftp/python/3.8.9/python-3.8.9.exe --no-check-certificate
         fi
 
         arg1=$1
@@ -50,7 +50,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         if test -f "$FILE"; then
                 echo "$FILE already exists."
         else 
-                wget https://files.pythonhosted.org/packages/5e/ae/0d98e3707678c96d86aec0fe5002637801892f17281cc123521ab929e8fd/Pillow-10.0.0-cp38-cp38-win_amd64.whl
+                wget https://files.pythonhosted.org/packages/5e/ae/0d98e3707678c96d86aec0fe5002637801892f17281cc123521ab929e8fd/Pillow-10.0.0-cp38-cp38-win_amd64.whl --no-check-certificate
                 mv Pillow-10.0.0-cp38-cp38-win_amd64.whl Pillow-10.0.0-cp38-none-any.whl
         fi
 
