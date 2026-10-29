@@ -1,3 +1,8 @@
-prettytable
-distro
-subprocess
+discord.py>=2.7.0
+requests>=2.33.0
+cryptography>=50.0.0
+prettytable>=3.0.0
+distro>=1.8.0
+psutil>=6.0.0
+urllib3>=2.8.0
+evdev>=1.6.0

@@ -1,0 +1,34 @@
+# runtime / build
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+*.spec
+
+# local secrets / operator env (never commit)
+.env
+*.env
+!*.env.example
+discord.env
+
+# windows toolchain blob + payloads
+python-*.exe
+*.exe
+*.elf
+*.bin
+
+# wine / pyinstaller junk
+.wine/
+wine-*.log
+*.lnk
+
+# editor / OS
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/
